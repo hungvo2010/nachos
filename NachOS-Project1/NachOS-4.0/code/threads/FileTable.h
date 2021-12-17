@@ -21,8 +21,7 @@ class Filetable {
         OpenFileID OpenFile(char* name, int type);
         int CloseFile(OpenFileID id);
         int ReadFile(char* buffer, int charcount, OpenFileID id);
-        int WriteFile(char* buffer, int charcount, OpenFileID id);
-        
+        int WriteFile(char* buffer, int charcount, OpenFileID id);        
 };
 
 #endif
