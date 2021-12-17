@@ -109,6 +109,77 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
+                case SC_Open:
+                    {          
+                        //OpenFileID Open(char *name, int type)
+                        result = SysOpen(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
+                        
+                        DEBUG(dbgSys, "OpenFile returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Read:
+                    {
+                        result = SysRead(kernel->machine->ReadRegister(4), 
+                        kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
+                        
+                        DEBUG(dbgSys, "ReadFile returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Write:
+                    {
+                        result = SysWrite(kernel->machine->ReadRegister(4), 
+                        kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
+                        
+                        DEBUG(dbgSys, "WriteFile returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Close:
+                    {
+                        result = SysClose(kernel->machine->ReadRegister(4));
+
+                        DEBUG(dbgSys, "CloseFile returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
                 case SC_Add:  // Duoc cai dat san
                     DEBUG(dbgSys,
                           "Add " << kernel->machine->ReadRegister(4) << " + "

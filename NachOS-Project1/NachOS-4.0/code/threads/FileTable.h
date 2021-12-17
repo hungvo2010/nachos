@@ -12,9 +12,12 @@ typedef int OpenFileID
 
 #define MAX_FILE 10
 
+#include "bitmap.h"
+
 class Filetable {
     private:
-        int* file[MAX_FILE];
+        Bitmap* bm;
+        FILE* file[MAX_FILE];
     public:
         FileTable();
         int CreateFile(char* name);

@@ -18,6 +18,7 @@
 
 #include "kernel.h"
 #include "synchconsole.h"
+#define MAX_FILE 10
 
 char *User2System(int virtAddr, int limit);
 int System2User(int virtAddr, int len, char *buffer);
@@ -38,6 +39,46 @@ int SysCreate(int virAddr) {
     PCB curProccess = pTab->GetPCB(processId);
     int result = curProccess.CreateFile(filename);
     return result;
+}
+
+int SysOpen(int virAddr, int type){
+    char* filename = User2System(virAddr, 255);
+    if (strlen(filename) == 0 || filename == NULL){
+        printf("%s", "\n File name is not valid");
+        return -1;
+    }
+
+    if (type < 0 || type >= MAX_FILE){
+        printf("%s", "File mode is not valid");
+    }
+
+    int processId = kernel->currentThread->processID;
+    PCB curProccess = pTab->GetPCB(processId);
+    int result = curProccess.OpenFile(filename, type);
+    return result;
+}
+
+int SysRead(int virAddr, int charcount, int id){
+    int processId = kernel->currentThread->processID;
+    PCB curProccess = pTab->GetPCB(processId);
+    int result = curProccess.ReadFile(filename);
+    return result;
+}
+
+int SysWrite(int virAddr, int charcount, int id)
+{
+    int processId = kernel->currentThread->processID;
+    PCB curProccess = pTab->GetPCB(processId);
+    int result = curProccess.WriteFile(filename);
+    return result;
+}
+
+int SysClose(int id){
+    if (id <= 0 || id == 1 || id >= MAX_FILE){
+        return -1;
+    }
+    PCB curProccess = pTab->GetPCB(processId);
+    int result = curProccess.CloseFile(filename);
 }
 
 int SysReadNum() {
