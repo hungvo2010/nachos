@@ -5,9 +5,13 @@
 #include <string.h>
 
 FileTable::FileTable(){
+    // ouput to screen console
     this->file[0] = 0;
+    // input from keyboard
     this->file[1] = 1;
+
     for(int i=2; i<MAX_FILE; ++i){
+        // not opened yet
         this->file[i] = -1;
     }
 }

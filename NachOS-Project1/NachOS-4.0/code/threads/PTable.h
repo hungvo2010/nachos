@@ -19,7 +19,7 @@ class PTable {
         Bitmap bm;
         PCB* pcb[MAX_PROCESS];
         int psize;
-        Semaphore* bmsem;
+        Semaphore* bmsem = NULL;
     public:
         PTable(int size);
         ~PTable();

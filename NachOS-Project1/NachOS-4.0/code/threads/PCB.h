@@ -12,9 +12,9 @@
 
 class PCB {
     private:
-        Semaphore* joinsem;             // semaphore for join process
-        Semaphore* exitsem;             // semaphore for exit process
-        Semaphore* multex;              // semaphore for unique access
+        Semaphore* joinsem = NULL;             // semaphore for join process
+        Semaphore* exitsem = NULL;             // semaphore for exit process
+        Semaphore* multex = NULL;              // semaphore for unique access
         int exitcode;                   //    
         int numwait;                    // number of process joined
         Thread* thread;

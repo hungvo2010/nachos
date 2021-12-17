@@ -109,28 +109,6 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_CreateFile:  // Tao file
-                    DEBUG(dbgSys,
-                          "CreateFile " << kernel->machine->ReadRegister(4) << "\n");
-
-                    /* Process Sys_Create Systemcall*/
-
-                    result = SysCreate(
-                        /* char* filename */ (int)kernel->machine->ReadRegister(4));
-                        
-
-                    DEBUG(dbgSys, "CreateFile returning with " << result << "\n");
-                    /* Prepare Result */
-                    kernel->machine->WriteRegister(2, (int)result);
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-
                 case SC_Add:  // Duoc cai dat san
                     DEBUG(dbgSys,
                           "Add " << kernel->machine->ReadRegister(4) << " + "

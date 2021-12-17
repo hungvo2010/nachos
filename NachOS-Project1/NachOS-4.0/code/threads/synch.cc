@@ -34,7 +34,6 @@
 
 #include "copyright.h"
 #include "synch.h"
-#include "main.h"
 
 //----------------------------------------------------------------------
 // Semaphore::Semaphore
@@ -43,7 +42,6 @@
 //	"debugName" is an arbitrary name, useful for debugging.
 //	"initialValue" is the initial value of the semaphore.
 //----------------------------------------------------------------------
-
 Semaphore::Semaphore(char* debugName, int initialValue)
 {
     name = debugName;
@@ -82,8 +80,8 @@ Semaphore::P()
     IntStatus oldLevel = interrupt->SetLevel(IntOff);	
     
     while (value == 0) { 		// semaphore not available
-	queue->Append(currentThread);	// so go to sleep
-	currentThread->Sleep(FALSE);
+        queue->Append(currentThread);	// so go to sleep
+        currentThread->Sleep(FALSE);
     } 
     value--; 			// semaphore available, consume its value
    
@@ -201,6 +199,11 @@ void Lock::Release()
     lockHolder = NULL;
     semaphore->V();
 }
+
+bool Lock::IsHeldByCurrentThread() { 
+    return lockHolder == kernel->currentThread; }
+            // return true if the current thread 
+        // holds this lock.
 
 //----------------------------------------------------------------------
 // Condition::Condition

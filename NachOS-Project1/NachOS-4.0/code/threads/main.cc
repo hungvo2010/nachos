@@ -255,9 +255,11 @@ main(int argc, char **argv)
 
     kernel->Initialize();
 
-    pTab = new PTable(10);
+    addrLock = new Semaphore("addrLock", 1);
 
-    addrLock = new Semaphore('addrLock', 1)
+    gPhysPageBitMap = new Bitmap(256);
+
+    pTab = new PTable(10);    
 
     semTab = new STable();
 
