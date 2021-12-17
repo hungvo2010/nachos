@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c89",
+            "cppStandard": "gnu++98",
+                "${default}",
+                "${workspaceFolder}/NachOS-4.0/c++example",
+                "${workspaceFolder}/NachOS-4.0/code/threads",
+                "${workspaceFolder}/NachOS-4.0/code/lib",
+                "${workspaceFolder}/NachOS-4.0/code/machine",
+                "${workspaceFolder}/NachOS-4.0/code/userprog",
+                "${workspaceFolder}/NachOS-4.0/code/filesys"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
