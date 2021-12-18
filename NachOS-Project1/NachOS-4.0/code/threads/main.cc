@@ -45,8 +45,6 @@
 #include "filesys.h"
 #include "openfile.h"
 #include "sysdep.h"
-#include "STable.h"
-#include "PTable.h"
 
 // global variables
 Kernel *kernel;
@@ -261,7 +259,7 @@ main(int argc, char **argv)
 
     gPhysPageBitMap = new Bitmap(256);
 
-    pTab = new PTable(10);    
+    pTab = new PTable(10);  
 
     semTab = new STable();
 
@@ -299,7 +297,7 @@ main(int argc, char **argv)
 
     // finally, run an initial user program if requested to do so
     if (userProgName != NULL) {
-      AddrSpace *space = new AddrSpace;
+      AddrSpace *space = new AddrSpace();
       ASSERT(space != (AddrSpace *)NULL);
       if (space->Load(userProgName)) {  // load the program into the space
 	space->Execute();              // run the program

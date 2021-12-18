@@ -12,14 +12,16 @@
 #include "debug.h"
 #include "kernel.h"
 #include "STable.h"
-#include "PTable.h"
+#include "synch.h"
 
 extern Kernel *kernel;
 extern Debug *debug;
 extern Semaphore* addrLock;
 extern Bitmap* gPhysPageBitMap;
-extern STable* semTab;
 extern PTable* pTab;
+extern STable* semTab;
+
+#include "PTable.h"
 
 #endif // MAIN_H
 

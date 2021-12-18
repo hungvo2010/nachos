@@ -90,7 +90,7 @@ Thread::~Thread()
 //----------------------------------------------------------------------
 
 void 
-Thread::Fork(VoidFunctionPtr func, void *arg)
+Thread::Fork(VoidFunctionPtr func, void* arg)
 {
     Interrupt *interrupt = kernel->interrupt;
     Scheduler *scheduler = kernel->scheduler;

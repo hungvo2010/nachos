@@ -19,6 +19,9 @@
 #include "kernel.h"
 #include "synchconsole.h"
 #include "main.h"
+#include "PCB.h"
+#include "PTable.h"
+#include "STable.h"
 #define MAX_FILE 10
 
 char *User2System(int virtAddr, int limit);
@@ -83,8 +86,8 @@ int SysCreateFile(int virAddr) {
         return -1;
     }
     int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
-    int result = curProccess.CreateFile(filename);
+    PCB* curProccess = pTab->GetPCB(processId);
+    int result = curProccess->CreateFile(filename);
     return result;
 }
 
@@ -100,8 +103,8 @@ int SysOpenFile(int virAddr, int type){
     }
 
     int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
-    int result = curProccess.OpenFile(filename, type);
+    PCB* curProccess = pTab->GetPCB(processId);
+    int result = curProccess->OpenFile(filename, type);
     return result;
 }
 
@@ -110,8 +113,8 @@ int SysCloseFile(int id){
         return -1;
     }
     int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
-    int result = curProccess.CloseFile(id);
+    PCB* curProccess = pTab->GetPCB(processId);
+    int result = curProccess->CloseFile(id);
     return result;
 }
 
@@ -271,10 +274,10 @@ int SysReadFile(int virAddr, int charcount, int id){
     }
 
     int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
+    PCB* curProccess = pTab->GetPCB(processId);
 
     char* buffer = new char[charcount];
-    int result = curProccess.ReadFile(buffer, charcount, id);
+    int result = curProccess->ReadFile(buffer, charcount, id);
 
     System2User(virAddr, charcount, buffer);
     return result;
@@ -297,10 +300,10 @@ int SysWriteFile(int virAddr, int charcount, int id)
     }
     
     int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
+    PCB* curProccess = pTab->GetPCB(processId);
 
     char* buffer = User2System(virAddr, charcount);
-    int result = curProccess.WriteFile(buffer, charcount, id);
+    int result = curProccess->WriteFile(buffer, charcount, id);
     return result;
 }
 

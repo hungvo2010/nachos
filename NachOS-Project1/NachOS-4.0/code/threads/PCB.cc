@@ -1,5 +1,10 @@
 #include "PCB.h"
 #include "progtest.cc"
+#include "utility.h"
+#include "main.h"
+#include "thread.h"
+#include "addrspace.h"
+
 PCB::PCB(){
 	this->parentID = kernel->currentThread->processID;
 	this->numwait = this->exitcode = 0;
