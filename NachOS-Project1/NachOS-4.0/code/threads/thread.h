@@ -104,7 +104,7 @@ class Thread {
     void setStatus(ThreadStatus st) { status = st; }
     char* getName() { return (name); }
     void setName(char* filename) {
-      name = filename;
+      strcpy(name, filename);
     }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working

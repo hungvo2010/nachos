@@ -180,6 +180,23 @@ void ExceptionHandler(ExceptionType which) {
                         break;
                     }
 
+                case SC_Exec:
+                    {
+                        result = SysExec(kernel->machine->ReadRegister(4));
+
+                        DEBUG(dbgSys, "Exec returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
                 case SC_Add:  // Duoc cai dat san
                     DEBUG(dbgSys,
                           "Add " << kernel->machine->ReadRegister(4) << " + "

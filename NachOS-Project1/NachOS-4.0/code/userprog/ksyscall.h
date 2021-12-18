@@ -28,6 +28,14 @@ void SysHalt() { kernel->interrupt->Halt(); }
 
 int SysAdd(int op1, int op2) { return op1 + op2; }
 
+int SysExec(int virAddr){
+    char* name = User2System(virAddr, 255);
+    if (name == NULL){
+        return -1;
+    }
+    
+}
+
 // Cai dat cua ham ReadNum, duoc goi trong exception.cc
 int SysCreateFile(int virAddr) {
     char* filename = User2System(virAddr, 255);

@@ -122,6 +122,12 @@ int Join(SpaceId id);
  * file system has not been implemented.
  */
 
+int CreateSemaphore(char* name, int semval);
+
+int Wait(char* name);
+
+int Signal(char* name);
+
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;
 
