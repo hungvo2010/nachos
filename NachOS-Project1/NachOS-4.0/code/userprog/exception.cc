@@ -93,7 +93,7 @@ void ExceptionHandler(ExceptionType which) {
 
                     /* Process Sys_Create Systemcall*/
 
-                    result = SysCreate(
+                    result = SysCreateFile(
                         /* char* filename */ (int)kernel->machine->ReadRegister(4));
                         
 
@@ -112,7 +112,7 @@ void ExceptionHandler(ExceptionType which) {
                 case SC_Open:
                     {          
                         //OpenFileID Open(char *name, int type)
-                        result = SysOpen(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
+                        result = SysOpenFile(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
                         
                         DEBUG(dbgSys, "OpenFile returning with " << result << "\n");
                         /* Prepare Result */
@@ -129,7 +129,7 @@ void ExceptionHandler(ExceptionType which) {
 
                 case SC_Read:
                     {
-                        result = SysRead(kernel->machine->ReadRegister(4), 
+                        result = SysReadFile(kernel->machine->ReadRegister(4), 
                         kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
                         
                         DEBUG(dbgSys, "ReadFile returning with " << result << "\n");
@@ -147,7 +147,7 @@ void ExceptionHandler(ExceptionType which) {
 
                 case SC_Write:
                     {
-                        result = SysWrite(kernel->machine->ReadRegister(4), 
+                        result = SysWriteFile(kernel->machine->ReadRegister(4), 
                         kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
                         
                         DEBUG(dbgSys, "WriteFile returning with " << result << "\n");
@@ -165,7 +165,7 @@ void ExceptionHandler(ExceptionType which) {
 
                 case SC_Close:
                     {
-                        result = SysClose(kernel->machine->ReadRegister(4));
+                        result = SysCloseFile(kernel->machine->ReadRegister(4));
 
                         DEBUG(dbgSys, "CloseFile returning with " << result << "\n");
                         /* Prepare Result */

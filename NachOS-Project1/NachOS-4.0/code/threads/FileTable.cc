@@ -31,19 +31,22 @@ OpenFileID Filetable::OpenFile(char* name, int type){
         return -1;
     }
 
-    int id = bm->FindAndSet();
-    if (id == -1){
+    int id = bm->FindAndSet(); // find free slot
+    if (id == -1){  // not enough memory
         return -1;
     }    
 
     char cwd[PATH_MAX];
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
-    sprintf (sbuf, "%s/%s", cwd, filename);
+    sprintf (sbuf, "%s/%s", cwd, name);
 
-    char* mode = type == 0 ? 'w+b' : 'rb';
+    char* mode = type == 0 ? 'r+b' : 'rb';
     file[id] = fopen(sbuf, mode);
-    return id;
+
+    // if file name not found or some other error occurred
+    if (file[id]) return id;
+    return -1;
 }
 
 int FileTable::ReadFile(char* buffer, int charcount, OpenFileID id){
@@ -51,11 +54,12 @@ int FileTable::ReadFile(char* buffer, int charcount, OpenFileID id){
         // file is not opened yet
         return -1;
     }
-    char* temp = new char[charcount];
-    int result = fread(temp, charcount, 1, file[id]);
-    strcpy(buffer, temp);
-    return result;
 
+    int result = fread(buffer, 1, charcount, file[id]);
+    if (result == 0){
+        return -2;
+    }
+    return result;
 }
 
 int FileTable::WriteFile(char* buffer, int charcount, OpenFileID id){
@@ -63,7 +67,7 @@ int FileTable::WriteFile(char* buffer, int charcount, OpenFileID id){
         // file is not opened yet
         return -1;
     }
-    int result = fwrite(buffer, charcount, 1, file[id]);
+    int result = fwrite(buffer, 1, charcount, file[id]);
     return result;
 }
 
