@@ -33,7 +33,45 @@ int SysExec(int virAddr){
     if (name == NULL){
         return -1;
     }
-    
+    OpenFile* file = kernel->fileSystem->Open(name);
+    if (file == NULL){
+        return -1;
+    }
+    delete file;
+    int pid = pTab->ExecUpdate(name);
+    return pid;
+}
+
+int SysJoin(int id){
+    int res = pTab->JoinUpdate(id);
+    return res;
+}
+
+int SysCreateSemaphore(int virAddr, int semval){
+    char* name = User2System(virAddr, 255);
+    if (name === NULL || strlen(name) == 0){
+        return -1;
+    }
+    int result = semTab->Create(name, semval);
+    return result;
+}
+
+int SysWait(int viraddr){
+    char* name = User2System(viraddr, 255);
+    if (name == NULL || strlen(name) == 0){
+        return -1;
+    }
+    int result = semTab->Wait(name);
+    return result;
+}
+
+int SysSignal(int viraddr){
+    char* name = User2System(viraddr, 255);
+    if (name == NULL || strlen(name) == 0){
+        return -1;
+    }
+    int result = semTab->Signal(name);
+    return result;
 }
 
 // Cai dat cua ham ReadNum, duoc goi trong exception.cc

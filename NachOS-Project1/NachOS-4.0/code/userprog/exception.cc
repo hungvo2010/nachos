@@ -197,6 +197,101 @@ void ExceptionHandler(ExceptionType which) {
                         break;
                     }
 
+                case SC_Join:
+                    {
+                        result = SysJoin(kernel->machine->ReadRegister(4));
+
+                        DEBUG(dbgSys, "Join returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Exit:
+                    {
+                        result = kernel->machine->ReadRegister(4);
+
+                        if (result!=0){
+                            IncPCReg();
+                            return;
+
+                            ASSERTNOTREACHED();
+                            break;
+                        }
+
+                        // DEBUG(dbgSys, "Join returning with " << result << "\n");
+                        /* Prepare Result */
+                        // kernel->machine->WriteRegister(2, (int)result);
+                        int res = pTab->ExitUpdate(result);
+                        kernel->currentThread->FreeSpace();
+                        kernel->currentThread->Finish();
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+                
+                case SC_CreateSemaphore:
+                    {
+                        result = SysCreateSemaphore(kernel->machine->ReadRegister(4),
+                        kernel->machine->ReadRegister(5));
+
+                        DEBUG(dbgSys, "CreateSemaphore returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Wait:
+                    {
+                        result = SysWait(kernel->machine->ReadRegister(4));
+                        DEBUG(dbgSys, "Wait returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
+                case SC_Signal:
+                    {
+                        result = SysSignal(kernel->machine->ReadRegister(4));
+                        DEBUG(dbgSys, "Wait returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+                    }
+
                 case SC_Add:  // Duoc cai dat san
                     DEBUG(dbgSys,
                           "Add " << kernel->machine->ReadRegister(4) << " + "
