@@ -226,17 +226,34 @@ int SysRandomNum() {
 void SysReadString(int virtAddress, int length) {
     char *buffer;
     int i = 0;
+    char ch;
+    bool flag = false;
     buffer = User2System(virtAddress, length);
-    for (i = 0; i < length; i++) {
-        buffer[i] = kernel->synchConsoleIn->GetChar();
-        if (buffer[i] == '\n') {
-            buffer[i] = '\0';
-            break;
+    for(i=0; i < length; ++i){
+        buffer[i] = 0;
+    }
+    i = 0;
+    while( i < length && flag == false){
+        do {
+            ch = kernel->synchConsoleIn->GetChar();
+        } while (ch == EOF)
+        if (ch == '\012' || ch == '\001'){
+            flag = true;
+        }
+        else {
+            buffer[i++] = ch; 
         }
     }
+    // for (i = 0; i < length; i++) {
+    //     buffer[i] = kernel->synchConsoleIn->GetChar();
+    //     if (buffer[i] == '\n') {
+    //         buffer[i] = '\0';
+    //         break;
+    //     }
+    // }
     System2User(virtAddress, length, buffer);  // chuyen vung nho ve lai user-space
     delete buffer;
-    return i;
+    // return i;
 }
 
 // Ham copy buffer tu user-space vao kernel-space
@@ -246,7 +263,9 @@ char *User2System(int virtAddr, int limit) {
     char *kernelBuf = NULL;
     kernelBuf = new char[limit + 1];  // need for terminal string
     if (kernelBuf == NULL) return kernelBuf;
+
     memset(kernelBuf, 0, limit + 1);
+
     for (i = 0; i < limit; i++) {
         kernel->machine->ReadMem(virtAddr + i, 1, &oneChar);
         kernelBuf[i] = (char)oneChar;
@@ -256,16 +275,15 @@ char *User2System(int virtAddr, int limit) {
 }
 
 // Cai dat cua ham PrintString, duoc goi trong exception.cc
-int SysPrintString(int virtAdrr) {
+void SysPrintString(int virtAdrr) {
+    int i = 0;
     char *buffer;
     buffer = User2System(virtAdrr, 1000);  // chuyen du lieu tu user-space vao kernel-space
-    int i = 0;
     while (buffer[i] != '\0') {  // in tung ky tu ra man hinh
         kernel->synchConsoleOut->PutChar((char)buffer[i]);
         i++;
     }
     delete buffer;
-    return i;
 }
 
 // Ham copy buffer tu kernel-space ra user-space

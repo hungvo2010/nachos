@@ -176,7 +176,7 @@ CreateFile:
 	addiu $2,$0,SC_CreateFile
 	syscall
 	j	$31
-	.end CreateFile
+	.end CreateFile	
 
 	.globl Create
 	.ent	Create

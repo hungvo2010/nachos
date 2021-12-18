@@ -9,8 +9,10 @@
 
 int main()
 {
-  char* filename = "hello.txt";
-  int result = Create(filename);
+  char* buffer;
+  int result;
+  ReadString(buffer, 20);
+  result = Open("hello.txt", 1);
   PrintNum(result);
   Halt();
   /* not reached */
