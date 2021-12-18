@@ -45,6 +45,8 @@
 #include "filesys.h"
 #include "openfile.h"
 #include "sysdep.h"
+#include "STable.h"
+#include "PTable.h"
 
 // global variables
 Kernel *kernel;

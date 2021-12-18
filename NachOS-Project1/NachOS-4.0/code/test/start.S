@@ -175,7 +175,7 @@ Signal:
 CreateFile:
 	addiu $2,$0,SC_CreateFile
 	syscall
-	j	$31
+	j 	$31
 	.end CreateFile	
 
 	.globl Create

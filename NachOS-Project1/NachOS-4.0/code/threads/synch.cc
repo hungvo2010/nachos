@@ -34,6 +34,7 @@
 
 #include "copyright.h"
 #include "synch.h"
+#include "main.h"
 
 //----------------------------------------------------------------------
 // Semaphore::Semaphore

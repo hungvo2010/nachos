@@ -8,6 +8,8 @@ PCB::PCB(){
 	this->joinsem = new Semaphore("joinsem",0);
 	this->exitsem = new Semaphore("exitsem",0);
 	this->multex = new Semaphore("multex",1);
+
+	this->filetable = new Filetable();
 }
 PCB::PCB(int id){
 	if (id == 0){
@@ -122,4 +124,24 @@ void PCB::DecNumWait(){
 	this->multex->P();
 	this->numwait--;
 	this->multex->V();
+}
+
+int PCB::CreateFile(char* filename){
+    return this->filetable->CreateFile(filename);
+}
+
+OpenFileID PCB::OpenFile(char* filename, int type){
+    return this->filetable->OpenFile(filename, type);
+}
+
+int PCB::ReadFile(char* buffer, int charcount, OpenFileID id){
+	return this->filetable->ReadFile(buffer, charcount, id);
+}
+
+int PCB::WriteFile(char* buffer, int charcout, OpenFileID id){
+	return this->filetable->WriteFile(buffer, charcount, id);
+}
+
+int PCB::CloseFile(OpenFileID id){
+	return this->filetable->CloseFile(i);
 }

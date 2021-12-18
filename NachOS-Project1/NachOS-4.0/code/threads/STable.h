@@ -1,6 +1,4 @@
 // STable.h
-// describe semaphore
-
 // Copyright (c) 1992-1996 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation 
 // of liability and disclaimer of warranty provisions.
@@ -11,8 +9,6 @@
 #include "bitmap.h"
 #define MAX_SEMAPHORE 10
 
-
-#endif // STABLE_H
 
 // Lop Sem dung de quan ly semaphore.
 class Sem
@@ -76,3 +72,4 @@ public:
 
 	
 };
+#endif // STABLE_H

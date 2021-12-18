@@ -8,18 +8,17 @@
 #ifndef FileTable_H
 #define FileTable_H
 
-typedef int OpenFileID
-
+#include "bitmap.h"
 #define MAX_FILE 10
 
-#include "bitmap.h"
+typedef int OpenFileID;
 
 class Filetable {
     private:
         Bitmap* bm;
         FILE* file[MAX_FILE];
     public:
-        FileTable();
+        Filetable();
         int CreateFile(char* name);
         OpenFileID OpenFile(char* name, int type);
         int CloseFile(OpenFileID id);

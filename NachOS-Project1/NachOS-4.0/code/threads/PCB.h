@@ -9,6 +9,8 @@
 #define PCB_H
 
 #include "synch.h"
+#include "FileTable.h"
+typedef int OpenFileID;
 
 class PCB {
     private:
@@ -18,6 +20,7 @@ class PCB {
         int exitcode;                   //    
         int numwait;                    // number of process joined
         Thread* thread;
+        Filetable* filetable;
     public:
         int parentID;        
     PCB();
@@ -37,6 +40,12 @@ class PCB {
     int GetExitCode();
     void SetFileName(char* fn);
     char* GetFileName();
+
+    int CreateFile(char* filename);
+    OpenFileID OpenFile(char* filename, int type);
+    int ReadFile(char* buffer, int charcount, OpenFileID id);
+    int WriteFile(char* buffer, int charcount, OpenFileID id);
+    int CloseFile(OpenFileID id);
 };
 
 #endif

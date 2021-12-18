@@ -87,14 +87,18 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
                 
-                case SC_Create:  // Tao file
+                case SC_CreateFile:  // Tao file
+                    {
+                    printf("\n File name is not valid");
                     DEBUG(dbgSys,
                           "CreateFile " << kernel->machine->ReadRegister(4) << "\n");
 
+                    kernel->machine->WriteRegister(2, -3);
+
                     /* Process Sys_Create Systemcall*/
 
-                    result = SysCreateFile(
-                        /* char* filename */ (int)kernel->machine->ReadRegister(4));
+                    result = SysCreateFile(kernel->machine->ReadRegister(4));
+                        /* char* filename */
                         
 
                     DEBUG(dbgSys, "CreateFile returning with " << result << "\n");
@@ -108,6 +112,7 @@ void ExceptionHandler(ExceptionType which) {
 
                     ASSERTNOTREACHED();
                     break;
+                    }
 
                 case SC_Open:
                     {          
@@ -229,7 +234,7 @@ void ExceptionHandler(ExceptionType which) {
                         // DEBUG(dbgSys, "Join returning with " << result << "\n");
                         /* Prepare Result */
                         // kernel->machine->WriteRegister(2, (int)result);
-                        int res = pTab->ExitUpdate(result);
+                        pTab->ExitUpdate(result);
                         kernel->currentThread->FreeSpace();
                         kernel->currentThread->Finish();
 
@@ -298,7 +303,6 @@ void ExceptionHandler(ExceptionType which) {
                                  << kernel->machine->ReadRegister(5) << "\n");
 
                     /* Process SysAdd Systemcall*/
-
                     result = SysAdd(
                         /* int op1 */ (int)kernel->machine->ReadRegister(4),
                         /* int op2 */ (int)kernel->machine->ReadRegister(5));

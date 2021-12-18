@@ -18,6 +18,7 @@
 
 #include "kernel.h"
 #include "synchconsole.h"
+#include "main.h"
 #define MAX_FILE 10
 
 char *User2System(int virtAddr, int limit);
@@ -49,7 +50,7 @@ int SysJoin(int id){
 
 int SysCreateSemaphore(int virAddr, int semval){
     char* name = User2System(virAddr, 255);
-    if (name === NULL || strlen(name) == 0){
+    if (name == NULL || strlen(name) == 0){
         return -1;
     }
     int result = semTab->Create(name, semval);
@@ -78,7 +79,7 @@ int SysSignal(int viraddr){
 int SysCreateFile(int virAddr) {
     char* filename = User2System(virAddr, 255);
     if (strlen(filename) == 0 || filename == NULL){
-        printf('\n File name is not valid');
+        printf("\n File name is not valid");
         return -1;
     }
     int processId = kernel->currentThread->processID;
@@ -104,57 +105,14 @@ int SysOpenFile(int virAddr, int type){
     return result;
 }
 
-int SysReadFile(int virAddr, int charcount, int id){
-    if (charcount < 0 || id <= 0 || id >= MAX_FILE){
-        return -1;
-    }
-
-    // read from keyboard/console
-    if (id == 1){
-        int numchar = SysReadString(virAddr, charcount);
-        return numchar;
-    }
-
-    int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
-
-    char* buffer = new char[charcount];
-    int result = curProccess.ReadFile(buffer, charcount, id);
-
-    System2User(virAddr, charcount, buffer);
-    return result;
-}
-
-int SysWriteFile(int virAddr, int charcount, int id)
-{
-    if (charcount < 0 || id < 0 || id >= MAX_FILE){
-        return -1;
-    }
-
-    // write to screen/console
-    if (id == 0){
-        int result = SysPrintString(virAddr);
-        return result;
-    }
-    // write to keyboard
-    if (id == 1){
-        return -1;
-    }
-    
-    int processId = kernel->currentThread->processID;
-    PCB curProccess = pTab->GetPCB(processId);
-
-    char* buffer = User2System(virAddr, charcount);
-    int result = curProccess.WriteFile(buffer, charcount, id);
-    return result;
-}
-
 int SysCloseFile(int id){
     if (id <= 0 || id == 1 || id >= MAX_FILE){
         return -1;
     }
+    int processId = kernel->currentThread->processID;
     PCB curProccess = pTab->GetPCB(processId);
-    int result = curProccess.CloseFile(filename);
+    int result = curProccess.CloseFile(id);
+    return result;
 }
 
 int SysReadNum() {
@@ -223,7 +181,7 @@ int SysRandomNum() {
 }
 
 // Cai dat cua ham ReadString, duoc goi trong exception.cc
-void SysReadString(int virtAddress, int length) {
+int SysReadString(int virtAddress, int length) {
     char *buffer;
     int i = 0;
     char ch;
@@ -236,7 +194,7 @@ void SysReadString(int virtAddress, int length) {
     while( i < length && flag == false){
         do {
             ch = kernel->synchConsoleIn->GetChar();
-        } while (ch == EOF)
+        } while (ch == EOF);
         if (ch == '\012' || ch == '\001'){
             flag = true;
         }
@@ -253,7 +211,7 @@ void SysReadString(int virtAddress, int length) {
     // }
     System2User(virtAddress, length, buffer);  // chuyen vung nho ve lai user-space
     delete buffer;
-    // return i;
+    return i;
 }
 
 // Ham copy buffer tu user-space vao kernel-space
@@ -275,7 +233,7 @@ char *User2System(int virtAddr, int limit) {
 }
 
 // Cai dat cua ham PrintString, duoc goi trong exception.cc
-void SysPrintString(int virtAdrr) {
+int SysPrintString(int virtAdrr) {
     int i = 0;
     char *buffer;
     buffer = User2System(virtAdrr, 1000);  // chuyen du lieu tu user-space vao kernel-space
@@ -284,6 +242,7 @@ void SysPrintString(int virtAdrr) {
         i++;
     }
     delete buffer;
+    return i;
 }
 
 // Ham copy buffer tu kernel-space ra user-space
@@ -298,6 +257,51 @@ int System2User(int virtAddr, int len, char *buffer) {
         i++;
     } while (i < len && oneChar != 0);
     return i;
+}
+
+int SysReadFile(int virAddr, int charcount, int id){
+    if (charcount < 0 || id <= 0 || id >= MAX_FILE){
+        return -1;
+    }
+
+    // read from keyboard/console
+    if (id == 1){
+        int numchar = SysReadString(virAddr, charcount);
+        return numchar;
+    }
+
+    int processId = kernel->currentThread->processID;
+    PCB curProccess = pTab->GetPCB(processId);
+
+    char* buffer = new char[charcount];
+    int result = curProccess.ReadFile(buffer, charcount, id);
+
+    System2User(virAddr, charcount, buffer);
+    return result;
+}
+
+int SysWriteFile(int virAddr, int charcount, int id)
+{
+    if (charcount < 0 || id < 0 || id >= MAX_FILE){
+        return -1;
+    }
+
+    // write to screen/console
+    if (id == 0){
+        int result = SysPrintString(virAddr);
+        return result;
+    }
+    // write to keyboard
+    if (id == 1){
+        return -1;
+    }
+    
+    int processId = kernel->currentThread->processID;
+    PCB curProccess = pTab->GetPCB(processId);
+
+    char* buffer = User2System(virAddr, charcount);
+    int result = curProccess.WriteFile(buffer, charcount, id);
+    return result;
 }
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
