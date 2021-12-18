@@ -12,9 +12,11 @@
 #include "thread.h"
 #include "FileTable.h"
 #include "main.h"
-typedef int OpenFileID;
+// #include "progtest.cc"
 
-extern void StartProcess_2(int id);
+// typedef int OpenFileID;
+
+extern void StartProcess_2(void*);
 
 class PCB {
     private:
@@ -85,7 +87,7 @@ class PCB {
             // Đặt parrentID của thread này là processID của thread gọi thực thi Exec
             this->parentID = kernel->currentThread->processID;
             // Gọi thực thi Fork(StartProcess_2,id) => Ta cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó.
-            this->thread->Fork(StartProcess_2, id);
+            this->thread->Fork(StartProcess_2, &id);
 
                 multex->V();
             // Trả về id.

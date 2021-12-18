@@ -8,10 +8,10 @@
 #ifndef PTABLE_H
 #define PTABLE_H
 
+#include "main.h"
 #include "PCB.h"
 #include "bitmap.h"
 #include "synch.h"
-#include "main.h"
 
 #define MAX_PROCESS 10
 

@@ -11,8 +11,9 @@
 #include "copyright.h"
 #include "debug.h"
 #include "kernel.h"
+#include "PTable.h"
 #include "STable.h"
-#include "synch.h"
+
 
 extern Kernel *kernel;
 extern Debug *debug;
