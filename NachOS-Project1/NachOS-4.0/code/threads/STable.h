@@ -53,68 +53,6 @@ private:
 	Bitmap* bm;	// quản lý slot trống
 	Sem* semTab[MAX_SEMAPHORE];	// quản lý tối đa 10 đối tượng Sem
 public:
-	// STable(){
-	// 	this->bm = new Bitmap(MAX_SEMAPHORE);
-
-	// 	for(int i=0; i<MAX_SEMAPHORE; ++i){
-	// 		this->semTab[i] = NULL;
-	// 	}
-	// }
-
-	// ~STable(){
-	// 	if(this->bm){
-	// 		delete this->bm;
-	// 		this->bm = NULL;
-	// 	}
-	// }
-
-	// int Create(char* name, int init){
-	// 	for(int i = 0; i < MAX_SEMAPHORE; ++i){
-	// 		if (bm->Test(i)){
-	// 			// if two string is equal
-	// 			if (strcmp(name, semTab[i]->GetName()) == 0){
-	// 				return -1;
-	// 			}
-	// 		}
-	// 	}
-	// 	int id = this->FindFreeSlot();
-	// 	if (id < 0){
-	// 		return -1;
-	// 	}
-	// 	this->semTab[id] = new Sem(name, init);
-	// 	return 0;
-	// }
-
-	// int Wait(char* name){
-	// 	for(int i = 0; i < MAX_SEMAPHORE; ++i){
-	// 		if (bm->Test(i)){
-	// 			// if two string is equal
-	// 			if (strcmp(name, semTab[i]->GetName()) == 0){
-	// 				semTab[i]->wait();
-	// 				return 0;
-	// 			}
-	// 		}
-	// 	}
-	// 	return -1;
-	// }
-
-	// int Signal(char* name){
-	// 	for(int i = 0; i < MAX_SEMAPHORE; ++i){
-	// 		if (bm->Test(i)){
-	// 			// if two string is equal
-	// 			if (strcmp(name, semTab[i]->GetName()) == 0){
-	// 				semTab[i]->signal();
-	// 				return 0;
-	// 			}
-	// 		}
-	// 	}
-	// 	return -1;
-	// }
-
-	// int FindFreeSlot(){
-	// 	return bm->FindAndSet();
-	// }
-
 	//khởi tạo size đối tượng Sem để quản lý 10 Semaphore. Gán giá trị ban đầu là null
 	// nhớ khởi tạo bm để sử dụng
 	STable();		
