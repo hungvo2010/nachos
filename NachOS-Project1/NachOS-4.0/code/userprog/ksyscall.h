@@ -20,8 +20,6 @@
 #include "synchconsole.h"
 #include "main.h"
 #include "PCB.h"
-#include "PTable.h"
-#include "STable.h"
 #define MAX_FILE 10
 
 char *User2System(int virtAddr, int limit);

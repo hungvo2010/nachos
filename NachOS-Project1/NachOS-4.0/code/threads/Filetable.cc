@@ -1,11 +1,11 @@
-#include "FileTable.h"
-
+#include "Filetable.h"
 #include <unistd.h>
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
+#include<sys/stat.h>
 
-FileTable::FileTable(){
+Filetable::Filetable(){
     bm = new Bitmap(MAX_FILE);
     // ouput to screen console
     bm->Mark(0);
@@ -17,7 +17,7 @@ FileTable::FileTable(){
     }
 }
 
-int FileTable::CreateFile(char* filename){
+int Filetable::CreateFile(char* filename){
     char cwd[PATH_MAX];
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
@@ -49,7 +49,7 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     return -1;
 }
 
-int FileTable::ReadFile(char* buffer, int charcount, OpenFileID id){
+int Filetable::ReadFile(char* buffer, int charcount, OpenFileID id){
     if (!bm->Test(id)){
         // file is not opened yet
         return -1;
@@ -62,7 +62,7 @@ int FileTable::ReadFile(char* buffer, int charcount, OpenFileID id){
     return result;
 }
 
-int FileTable::WriteFile(char* buffer, int charcount, OpenFileID id){
+int Filetable::WriteFile(char* buffer, int charcount, OpenFileID id){
     if (!bm->Test(id)){
         // file is not opened yet
         return -1;
@@ -71,7 +71,7 @@ int FileTable::WriteFile(char* buffer, int charcount, OpenFileID id){
     return result;
 }
 
-int FileTable::CloseFile(OpenFileID id){
+int Filetable::CloseFile(OpenFileID id){
     if (!bm->Test(id)){
         // file not opened yet
         return -1;
@@ -80,4 +80,9 @@ int FileTable::CloseFile(OpenFileID id){
     bm->Clear(id);
     file[id] = NULL;
     return 0;
+}
+
+Filetable::~Filetable(){
+    if (!bm) delete bm;
+    delete[] file;
 }

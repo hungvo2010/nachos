@@ -145,6 +145,6 @@ char* PTable::GetFileName(int id){
     return this->pdb[id]->GetFileName();
 }
 
-PCB PTable::GetPCB(int pid){
+PCB* PTable::GetPCB(int pid){
     return this->pdb[pid];
 }
