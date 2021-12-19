@@ -9,6 +9,7 @@
 #define FileTable_H
 
 #include "bitmap.h"
+#include "stdio.h"
 #define MAX_FILE 10
 
 typedef int OpenFileID;

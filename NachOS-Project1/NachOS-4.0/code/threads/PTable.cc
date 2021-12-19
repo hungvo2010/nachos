@@ -8,7 +8,7 @@ PTable::PTable(int size){
 
     this->psize = size;
     this->bm = new Bitmap(size);
-    this->bmsem = new Semaphore('bmsem', 1);
+    this->bmsem = new Semaphore("bmsem", 1);
 
     for(int i=0; i<psize; ++i){
         this->pcb[i] = NULL;
@@ -29,7 +29,7 @@ PTable::~PTable(){
     }
 	    
     
-    for(int i=0; i<psize; ++i)
+    for(int i=0; i<psize; ++i){
 		if(this->pcb[i] != 0){
             delete this->pcb[i];
             this->pcb[i] = NULL;
@@ -37,7 +37,7 @@ PTable::~PTable(){
 			
     }
 		
-	if (bmsem != 0){
+	if (bmsem != NULL){
         delete this->bmsem;
         this->bmsem = NULL;
     }
@@ -46,10 +46,10 @@ PTable::~PTable(){
 int PTable::ExecUpdate(char* name){
     bmsem->P();
     if (name == NULL || strlen(name) == 0){
-        bm->V();
+        bmsem->V();
         return -1;
     }
-    if( strcmp(name,"./test/scheduler") == 0 || strcmp(name,currentThread->getName()) == 0 )
+    if( strcmp(name,"./test/scheduler") == 0 || strcmp(name,kernel->currentThread->getName()) == 0 )
 	{
 		printf("\nPTable::Exec : Can't not execute itself.\n");		
 		bmsem->V();
@@ -142,9 +142,9 @@ int PTable::GetFreeSlot(){
 }
 
 char* PTable::GetFileName(int id){
-    return this->pdb[id]->GetFileName();
+    return this->pcb[id]->GetFileName();
 }
 
 PCB* PTable::GetPCB(int pid){
-    return this->pdb[pid];
+    return this->pcb[pid];
 }

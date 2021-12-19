@@ -8,7 +8,6 @@
 #ifndef PTABLE_H
 #define PTABLE_H
 
-#include "main.h"
 #include "bitmap.h"
 #include "synch.h"
 #include "PCB.h"

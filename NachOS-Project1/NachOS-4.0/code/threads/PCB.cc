@@ -1,6 +1,26 @@
 #include "PCB.h"
 #include "main.h"
-#include "progtest.h"
+void StartProcess_2(int id)
+{
+	char* fileName = pTab->GetFileName(id);
+
+	AddrSpace *space;
+	space = new AddrSpace(fileName);
+
+	if(space == NULL)
+	{
+		printf("\nPCB::Exec : Can't create AddSpace.");
+		return;
+	}
+
+	kernel->currentThread->space = space;
+
+	space->InitRegisters();		
+	space->RestoreState();		
+
+	kernel->machine->Run();		
+	ASSERT(FALSE);		
+}
 
 PCB::PCB(){
 	this->parentID = kernel->currentThread->processID;
@@ -18,7 +38,7 @@ PCB::PCB(int id){
 		this->parentID = -1;
 	}
 	else {
-		this->parentID = kernle->currentThread->processID;
+		this->parentID = kernel->currentThread->processID;
 
 		this->numwait = this->exitcode = 0;
 		this->thread = NULL;
@@ -60,7 +80,7 @@ int PCB::Exec(char* filename, int id)
 	// Đặt parrentID của thread này là processID của thread gọi thực thi Exec
 	this->parentID = kernel->currentThread->processID;
 	// Gọi thực thi Fork(StartProcess_2,id) => Ta cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó.
- 	this->thread->Fork(StartProcess_2, id);
+ 	this->thread->Fork((VoidFunctionPtr)StartProcess_2, (void*)id);
 
     	multex->V();
 	// Trả về id.
@@ -140,10 +160,10 @@ int PCB::ReadFile(char* buffer, int charcount, OpenFileID id){
 	return this->filetable->ReadFile(buffer, charcount, id);
 }
 
-int PCB::WriteFile(char* buffer, int charcout, OpenFileID id){
+int PCB::WriteFile(char* buffer, int charcount, OpenFileID id){
 	return this->filetable->WriteFile(buffer, charcount, id);
 }
 
 int PCB::CloseFile(OpenFileID id){
-	return this->filetable->CloseFile(i);
+	return this->filetable->CloseFile(id);
 }

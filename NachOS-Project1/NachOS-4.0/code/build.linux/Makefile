@@ -294,7 +294,6 @@ USERPROG_H = ../userprog/addrspace.h\
 	../userprog/syscall.h\
 	../userprog/synchconsole.h\
 	../userprog/noff.h\
-	../userprog/progtest.h\
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/exception.cc\

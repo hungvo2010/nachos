@@ -41,7 +41,7 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     char sbuf[1024];
     sprintf (sbuf, "%s/%s", cwd, name);
 
-    char* mode = type == 0 ? 'r+b' : 'rb';
+    const char* mode = type == 0 ? "r+b" : "rb";
     file[id] = fopen(sbuf, mode);
 
     // if file name not found or some other error occurred
