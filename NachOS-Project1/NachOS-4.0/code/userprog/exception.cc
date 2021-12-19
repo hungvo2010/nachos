@@ -89,18 +89,14 @@ void ExceptionHandler(ExceptionType which) {
                 
                 case SC_CreateFile:  // Tao file
                     {
-                    printf("\n File name is not valid");
                     DEBUG(dbgSys,
                           "CreateFile " << kernel->machine->ReadRegister(4) << "\n");
-
-                    kernel->machine->WriteRegister(2, -3);
 
                     /* Process Sys_Create Systemcall*/
 
                     result = SysCreateFile(kernel->machine->ReadRegister(4));
                         /* char* filename */
                         
-
                     DEBUG(dbgSys, "CreateFile returning with " << result << "\n");
                     /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
@@ -117,6 +113,7 @@ void ExceptionHandler(ExceptionType which) {
                 case SC_Open:
                     {          
                         //OpenFileID Open(char *name, int type)
+                        printf("%s", "cucumber");
                         result = SysOpenFile(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
                         
                         DEBUG(dbgSys, "OpenFile returning with " << result << "\n");

@@ -27,11 +27,9 @@ int Filetable::CreateFile(char* filename){
 }
 
 OpenFileID Filetable::OpenFile(char* name, int type){
-    if (type != 0 && type != 1){
-        return -1;
-    }
-
+    printf("%s", "hello");
     int id = bm->FindAndSet(); // find free slot
+    
     if (id == -1){  // not enough memory
         return -1;
     }    
@@ -40,13 +38,15 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
     sprintf (sbuf, "%s/%s", cwd, name);
+    printf("%s", sbuf);
 
     const char* mode = type == 0 ? "r+b" : "rb";
-    file[id] = fopen(sbuf, mode);
+    FILE* fi = fopen(sbuf, mode);
+    if(!fi) return -1;
+    file[id] = fi;
 
     // if file name not found or some other error occurred
-    if (file[id]) return id;
-    return -1;
+    return id;
 }
 
 int Filetable::ReadFile(char* buffer, int charcount, OpenFileID id){

@@ -80,7 +80,7 @@ int SysSignal(int viraddr){
 int SysCreateFile(int virAddr) {
     char* filename = User2System(virAddr, 255);
     if (strlen(filename) == 0 || filename == NULL){
-        printf("\n File name is not valid");
+        printf("%s", "File name is not valid");
         return -1;
     }
     int processId = kernel->currentThread->processID;
@@ -90,15 +90,17 @@ int SysCreateFile(int virAddr) {
 }
 
 int SysOpenFile(int virAddr, int type){
+    printf("%s", "File name is not valid");
     char* filename = User2System(virAddr, 255);
     if (strlen(filename) == 0 || filename == NULL){
-        printf("%s", "\n File name is not valid");
+        printf("%s", "File name is not valid");
         return -1;
     }
 
-    if (type < 0 || type >= MAX_FILE){
-        printf("%s", "File mode is not valid");
-    }
+    if (type != 0 && type != 1){
+        printf("%s", "Open file mode is not valid");
+        return -1;
+    } 
 
     int processId = kernel->currentThread->processID;
     PCB* curProccess = pTab->GetPCB(processId);

@@ -10,10 +10,9 @@
 int main()
 {
   int result;
-  // char* filename;
-  // ReadString(filename, 30);
-  // result = CreateFile(filename);
-  result = Add(-4, 4);
+  char* filename;
+  ReadString(filename, 30);
+  result = Open(filename, 1);
   PrintNum(result);
   Halt();
   /* not reached */
