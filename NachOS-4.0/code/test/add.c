@@ -17,15 +17,10 @@ int main()
   ReadString(filename, 10);
   CreateFile(filename);
   file = Open(filename, 0);
-  PrintNum(file);
   ReadString(content, 10);
-  PrintString(content);
   result = Write(content, 40, file);
-  PrintNum(result);
   result = Read(readcontent, 40, file);
-  PrintString("\n-----\n");
-  PrintNum(result);
-  PrintString(readcontent);
+  PrintNum(result); // will be -2? write make file pointer to end of file, read at end of file return -2.
   Halt();
   /* not reached */
 }
