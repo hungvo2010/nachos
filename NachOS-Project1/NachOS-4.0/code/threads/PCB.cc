@@ -61,6 +61,9 @@ PCB::~PCB(){
 		this->thread->FreeSpace();
 		this->thread->Finish();		
 	}
+	if(this->filetable != NULL){
+		delete this->filetable;
+	}
 }
 int PCB::Exec(char* filename, int id)
 {  

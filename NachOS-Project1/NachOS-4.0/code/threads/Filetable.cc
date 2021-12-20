@@ -40,7 +40,7 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     sprintf (sbuf, "%s/%s", cwd, name);
     printf("%s", sbuf);
 
-    const char* filemode = type == 0 ? "r+b" : "rb";
+    const char* filemode = type == 0 ? "rb+" : "rb";
     FILE* fi = fopen(sbuf, filemode);
     if(!fi) return -1;
     file[id] = fi;
