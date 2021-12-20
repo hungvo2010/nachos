@@ -3,12 +3,6 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c89",
-            "cppStandard": "gnu++98",
                 "${default}",
                 "${workspaceFolder}/NachOS-4.0/c++example",
                 "${workspaceFolder}/NachOS-4.0/code/threads",
