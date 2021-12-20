@@ -13,12 +13,18 @@ int main()
   char* filename;
   char* content;
   char* readcontent;
-  ReadString(filename, 30);
+  int file;
+  ReadString(filename, 10);
   CreateFile(filename);
-  result = Open(filename, 0);
-  ReadString(content, 30);
-  Write(content, 40, result);
-  Read(readcontent, 40, result);
+  file = Open(filename, 0);
+  PrintNum(file);
+  ReadString(content, 10);
+  PrintString(content);
+  result = Write(content, 40, file);
+  PrintNum(result);
+  result = Read(readcontent, 40, file);
+  PrintString("\n-----\n");
+  PrintNum(result);
   PrintString(readcontent);
   Halt();
   /* not reached */

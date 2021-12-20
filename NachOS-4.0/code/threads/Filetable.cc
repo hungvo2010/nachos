@@ -38,7 +38,6 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
     sprintf (sbuf, "%s/%s", cwd, name);
-    printf("%s", sbuf);
 
     const char* filemode = type == 0 ? "rb+" : "rb";
     FILE* fi = fopen(sbuf, filemode);
@@ -56,7 +55,7 @@ int Filetable::ReadFile(char* buffer, int charcount, OpenFileID id){
     }
 
     // read "charcount" character from file
-    int result = fread(buffer, 1, charcount, file[id]);
+    int result = fread(buffer, 1, min(charcount, strlen(buffer)), file[id]);
     // end of file
     if (result == 0){
         return -2;
@@ -76,7 +75,7 @@ int Filetable::WriteFile(char* buffer, int charcount, OpenFileID id){
     }
 
     // write "charcount" character to file
-    int result = fwrite(buffer, 1, charcount, file[id]);
+    int result = fwrite(buffer, 1, min(strlen(buffer), charcount), file[id]);
     return result;
 }
 
@@ -87,6 +86,7 @@ int Filetable::CloseFile(OpenFileID id){
     }
 
     bm->Clear(id);
+    fclose(file[id]);
     file[id] = NULL;
     return 0;
 }
