@@ -18,6 +18,7 @@ class Filetable {
     private:
         Bitmap* bm;
         FILE* file[MAX_FILE];
+        int* mode;
     public:
         Filetable();
         int CreateFile(char* name);

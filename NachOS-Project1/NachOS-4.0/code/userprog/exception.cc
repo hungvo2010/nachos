@@ -113,7 +113,9 @@ void ExceptionHandler(ExceptionType which) {
                 case SC_Open:
                     {          
                         //OpenFileID Open(char *name, int type)
-                        printf("%s", "cucumber");
+                        DEBUG(dbgSys,
+                          "OpenFile " << kernel->machine->ReadRegister(4) << "\n" <<
+                            kernel->machine->ReadRegister(5));
                         result = SysOpenFile(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
                         
                         DEBUG(dbgSys, "OpenFile returning with " << result << "\n");

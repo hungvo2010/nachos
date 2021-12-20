@@ -3,16 +3,17 @@
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
-#include<sys/stat.h>
+#include <sys/stat.h>
 
 Filetable::Filetable(){
-    bm = new Bitmap(MAX_FILE);
+    this->bm = new Bitmap(MAX_FILE);
     // ouput to screen console
-    bm->Mark(0);
+    this->bm->Mark(0);
     // input from keyboard
-    bm->Mark(1);
-
-    for(int i=0; i<MAX_FILE; ++i){
+    this->bm->Mark(1);
+    this->mode = new int[MAX_FILE];
+    memset(this->mode, -1, MAX_FILE);
+    for(int i=2; i<2; ++i){
         file[i] = NULL;
     }
 }
@@ -27,8 +28,7 @@ int Filetable::CreateFile(char* filename){
 }
 
 OpenFileID Filetable::OpenFile(char* name, int type){
-    printf("%s", "hello");
-    int id = bm->FindAndSet(); // find free slot
+    int id = this->bm->FindAndSet(); // find free slot
     
     if (id == -1){  // not enough memory
         return -1;
@@ -40,11 +40,11 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     sprintf (sbuf, "%s/%s", cwd, name);
     printf("%s", sbuf);
 
-    const char* mode = type == 0 ? "r+b" : "rb";
-    FILE* fi = fopen(sbuf, mode);
+    const char* filemode = type == 0 ? "r+b" : "rb";
+    FILE* fi = fopen(sbuf, filemode);
     if(!fi) return -1;
     file[id] = fi;
-
+    mode[id] = type;
     // if file name not found or some other error occurred
     return id;
 }
@@ -55,7 +55,9 @@ int Filetable::ReadFile(char* buffer, int charcount, OpenFileID id){
         return -1;
     }
 
+    // read "charcount" character from file
     int result = fread(buffer, 1, charcount, file[id]);
+    // end of file
     if (result == 0){
         return -2;
     }
@@ -67,6 +69,13 @@ int Filetable::WriteFile(char* buffer, int charcount, OpenFileID id){
         // file is not opened yet
         return -1;
     }
+
+    // write to read only file mode
+    if (mode[id] == 1){
+        return -1;
+    }
+
+    // write "charcount" character to file
     int result = fwrite(buffer, 1, charcount, file[id]);
     return result;
 }
@@ -84,5 +93,9 @@ int Filetable::CloseFile(OpenFileID id){
 
 Filetable::~Filetable(){
     if (!bm) delete bm;
-    delete[] file;
+    for(int i = 2; i < MAX_FILE; ++i){
+        if (file[i]){
+            fclose(file[i]);
+        }
+    }
 }

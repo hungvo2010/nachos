@@ -11,9 +11,15 @@ int main()
 {
   int result;
   char* filename;
+  char* content;
+  char* readcontent;
   ReadString(filename, 30);
-  result = Open(filename, 1);
-  PrintNum(result);
+  CreateFile(filename);
+  result = Open(filename, 0);
+  ReadString(content, 30);
+  Write(content, 40, result);
+  Read(readcontent, 40, result);
+  PrintString(readcontent);
   Halt();
   /* not reached */
 }

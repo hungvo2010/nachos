@@ -90,7 +90,6 @@ int SysCreateFile(int virAddr) {
 }
 
 int SysOpenFile(int virAddr, int type){
-    printf("%s", "File name is not valid");
     char* filename = User2System(virAddr, 255);
     if (strlen(filename) == 0 || filename == NULL){
         printf("%s", "File name is not valid");

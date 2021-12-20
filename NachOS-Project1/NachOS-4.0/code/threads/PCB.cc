@@ -39,14 +39,15 @@ PCB::PCB(int id){
 	}
 	else {
 		this->parentID = kernel->currentThread->processID;
-
-		this->numwait = this->exitcode = 0;
-		this->thread = NULL;
-
-		this->joinsem = new Semaphore("joinsem",0);
-		this->exitsem = new Semaphore("exitsem",0);
-		this->multex = new Semaphore("multex",1);
 	}
+	this->numwait = this->exitcode = 0;
+	this->thread = NULL;
+
+	this->joinsem = new Semaphore("joinsem",0);
+	this->exitsem = new Semaphore("exitsem",0);
+	this->multex = new Semaphore("multex",1);
+
+	this->filetable = new Filetable();
 }
 PCB::~PCB(){
 	if(joinsem != NULL)

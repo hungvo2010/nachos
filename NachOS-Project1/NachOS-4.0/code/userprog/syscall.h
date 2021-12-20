@@ -128,12 +128,6 @@ int Join(SpaceId id);
  * file system has not been implemented.
  */
 
-int CreateSemaphore(char* name, int semval);
-
-int Wait(char* name);
-
-int Signal(char* name);
-
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;
 
@@ -211,6 +205,12 @@ int ThreadJoin(ThreadId id);
  * Deletes current thread and returns ExitCode to every waiting lokal thread.
  */
 void ThreadExit(int ExitCode);
+
+int CreateSemaphore(char* name, int semval);
+
+int Wait(char* name);
+
+int Signal(char* name);
 
 #endif /* IN_ASM */
 
