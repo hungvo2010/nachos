@@ -91,12 +91,14 @@ int Filetable::CloseFile(OpenFileID id){
 
     bm->Clear(id);
     fclose(file[id]);
+    mode[id] = -1;
     file[id] = NULL;
     return 0;
 }
 
 Filetable::~Filetable(){
-    if (!bm) delete bm;
+    if (bm) delete bm;
+    if (mode) delete[] mode;
     for(int i = 2; i < MAX_FILE; ++i){
         if (file[i]){
             fclose(file[i]);
