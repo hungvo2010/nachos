@@ -33,6 +33,7 @@ PCB::PCB(){
 
 	this->filetable = new Filetable();
 }
+
 PCB::PCB(int id){
 	if (id == 0){
 		this->parentID = -1;
@@ -49,6 +50,7 @@ PCB::PCB(int id){
 
 	this->filetable = new Filetable();
 }
+
 PCB::~PCB(){
 	if(joinsem != NULL)
 		delete this->joinsem;
@@ -65,6 +67,7 @@ PCB::~PCB(){
 		delete this->filetable;
 	}
 }
+
 int PCB::Exec(char* filename, int id)
 {  
     // Gọi mutex->P(); để giúp tránh tình trạng nạp 2 tiến trình cùng 1 lúc.
@@ -75,7 +78,7 @@ int PCB::Exec(char* filename, int id)
 
 	if(this->thread == NULL){
 		printf("\nPCB::Exec: Not enough memory!\n");
-        	multex->V(); // Nha CPU de nhuong CPU cho tien trinh khac
+		multex->V(); // Nha CPU de nhuong CPU cho tien trinh khac
 		return -1; // Tra ve -1 neu that bai
 	}
 
@@ -86,10 +89,9 @@ int PCB::Exec(char* filename, int id)
 	// Gọi thực thi Fork(StartProcess_2,id) => Ta cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó.
  	this->thread->Fork((VoidFunctionPtr)StartProcess_2, (void*)id);
 
-    	multex->V();
+	multex->V();
 	// Trả về id.
 	return id;
-
 }
 
 void PCB::JoinWait()
