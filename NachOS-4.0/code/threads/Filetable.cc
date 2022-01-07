@@ -20,8 +20,10 @@ Filetable::Filetable(){
 
 int Filetable::CreateFile(char* filename){
     char cwd[PATH_MAX];
+    // get current directory
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
+    // absolute path to new file
     sprintf (sbuf, "%s/%s", cwd, filename);
     int result = mknod(sbuf, S_IFREG|0666, 0);
     return result != 0 ? -1 : 0;
@@ -35,13 +37,15 @@ OpenFileID Filetable::OpenFile(char* name, int type){
     }    
 
     char cwd[PATH_MAX];
+    // get current directory
     getcwd(cwd, sizeof(cwd));
     char sbuf[1024];
+    // absolute path to new file
     sprintf (sbuf, "%s/%s", cwd, name);
 
     const char* filemode = type == 0 ? "rb+" : "rb";
     FILE* fi = fopen(sbuf, filemode);
-    if(!fi) return -1;
+    if (!fi) return -1;
     file[id] = fi;
     mode[id] = type;
     // if file name not found or some other error occurred

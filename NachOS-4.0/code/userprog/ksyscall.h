@@ -76,26 +76,29 @@ int SysSignal(int viraddr){
     return result;
 }
 
-// Cai dat cua ham ReadNum, duoc goi trong exception.cc
+// Cai dat cua ham CreateFile, duoc goi trong exception.cc
 int SysCreateFile(int virAddr) {
     char* filename = User2System(virAddr, 255);
-    if (strlen(filename) == 0 || filename == NULL){
+    if (filename == NULL || strlen(filename) == 0){
         printf("%s", "File name is not valid");
         return -1;
     }
+
     int processId = kernel->currentThread->processID;
     PCB* curProccess = pTab->GetPCB(processId);
     int result = curProccess->CreateFile(filename);
     return result;
 }
 
+// Cai dat cua ham OpenFile, duoc goi trong exception.cc
 int SysOpenFile(int virAddr, int type){
     char* filename = User2System(virAddr, 255);
-    if (strlen(filename) == 0 || filename == NULL){
+    if (filename == NULL || strlen(filename) == 0){
         printf("%s", "File name is not valid");
         return -1;
     }
 
+    // check file open mode is valid, 0: read and write, 1: read only
     if (type != 0 && type != 1){
         printf("%s", "Open file mode is not valid");
         return -1;
@@ -107,10 +110,13 @@ int SysOpenFile(int virAddr, int type){
     return result;
 }
 
+// Cai dat cua ham CloseFile, duoc goi trong exception.cc
 int SysCloseFile(int id){
+    // id < 0: not valid, id = 0: output to screen, id = 1: read from keyboard, id >= MAX_FILE: not valid
     if (id <= 0 || id == 1 || id >= MAX_FILE){
         return -1;
     }
+
     int processId = kernel->currentThread->processID;
     PCB* curProccess = pTab->GetPCB(processId);
     int result = curProccess->CloseFile(id);
@@ -204,13 +210,6 @@ int SysReadString(int virtAddress, int length) {
             buffer[i++] = ch; 
         }
     }
-    // for (i = 0; i < length; i++) {
-    //     buffer[i] = kernel->synchConsoleIn->GetChar();
-    //     if (buffer[i] == '\n') {
-    //         buffer[i] = '\0';
-    //         break;
-    //     }
-    // }
     System2User(virtAddress, length, buffer);  // chuyen vung nho ve lai user-space
     delete buffer;
     return i;
@@ -261,6 +260,7 @@ int System2User(int virtAddr, int len, char *buffer) {
     return i;
 }
 
+// Cai dat cua ham ReadFile, duoc goi trong exception.cc
 int SysReadFile(int virAddr, int charcount, int id){
     if (charcount < 0 || id <= 0 || id >= MAX_FILE){
         return -1;
@@ -272,10 +272,10 @@ int SysReadFile(int virAddr, int charcount, int id){
         return numchar;
     }
 
-    int processId = kernel->currentThread->processID;
-    PCB* curProccess = pTab->GetPCB(processId);
-
     char* buffer = new char[charcount];
+
+    int processId = kernel->currentThread->processID;
+    PCB* curProccess = pTab->GetPCB(processId);  
     int result = curProccess->ReadFile(buffer, charcount, id);
 
     System2User(virAddr, charcount, buffer);
@@ -298,11 +298,12 @@ int SysWriteFile(int virAddr, int charcount, int id)
         return -1;
     }
     
-    int processId = kernel->currentThread->processID;
-    PCB* curProccess = pTab->GetPCB(processId);
-
     char* buffer = User2System(virAddr, charcount);
+
+    int processId = kernel->currentThread->processID;
+    PCB* curProccess = pTab->GetPCB(processId);  
     int result = curProccess->WriteFile(buffer, charcount, id);
+
     return result;
 }
 
