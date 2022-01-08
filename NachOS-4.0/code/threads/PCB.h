@@ -48,6 +48,7 @@ class PCB {
         int numwait;                    // number of process joined
         Thread* thread;
         Filetable* filetable;
+        char filename[255];
 };
 
 #endif // PCB_H

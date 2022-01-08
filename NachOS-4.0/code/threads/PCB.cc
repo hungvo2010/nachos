@@ -135,7 +135,7 @@ int PCB::GetExitCode(){
 }
 
 void PCB::SetFileName(char* fn){
-	this->thread->setName(fn);
+	strcpy(filename, fn);
 }
 
 int PCB::GetNumWait(){

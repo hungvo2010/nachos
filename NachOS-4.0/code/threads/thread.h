@@ -103,9 +103,6 @@ class Thread {
     void CheckOverflow();   	// Check if thread stack has overflowed
     void setStatus(ThreadStatus st) { status = st; }
     char* getName() { return (name); }
-    void setName(char* filename) {
-      strcpy(name, filename);
-    }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
     void FreeSpace();
