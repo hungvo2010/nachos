@@ -183,39 +183,6 @@ void ExceptionHandler(ExceptionType which) {
 
                         ASSERTNOTREACHED();
                         break;
-
-                        int pos = machine->ReadRegister(4); // Lay vi tri can chuyen con tro den trong file
-			            int id = machine->ReadRegister(5); // Lay id cua file
-                        if (id < 2 || id >= MAX_FILE)
-                            {
-                                printf("\nKhong the seek vi id khong hop le.");
-                                machine->WriteRegister(2, -1);
-                                IncreasePC();
-                                return;
-                            }
-                        // Kiem tra file co ton tai khong
-                        if (fileSystem->openf[id] == NULL)
-                        {
-                            printf("\nKhong the seek vi file nay khong ton tai.");
-                            machine->WriteRegister(2, -1);
-                            IncreasePC();
-                            return;
-                        }
-                        // Neu pos = -1 thi gan pos = Length nguoc lai thi giu nguyen pos
-                        pos = (pos == -1) ? fileSystem->openf[id]->Length() : pos;
-                        if (pos > fileSystem->openf[id]->Length() || pos < 0) // Kiem tra lai vi tri pos co hop le khong
-                        {
-                            printf("\nKhong the seek file den vi tri nay.");
-                            machine->WriteRegister(2, -1);
-                        }
-                        else
-                        {
-                            // Neu hop le thi tra ve vi tri di chuyen thuc su trong file
-                            fileSystem->openf[id]->Seek(pos);
-                            machine->WriteRegister(2, pos);
-                        }
-                        IncreasePC();
-                        return;
                     }
 
                 case SC_Close:
