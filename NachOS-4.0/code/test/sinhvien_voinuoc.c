@@ -48,7 +48,6 @@ int main()
 	while (1)
 	{
 		Read(&c_readFile, 1, fileid_input);
-		PrintChar(c_readFile);
 		if (c_readFile != '\n')
 		{
 			if (c_readFile >= '0' && c_readFile <= '9')
@@ -59,7 +58,6 @@ int main()
 	}
 	// Goi thuc thi tien trinh sinhvien.c
 	file_success = Exec("../test/sinhvien");
-	PrintString("execsuccess");
 	if (file_success == -1)
 	{
 		Close(fileid_input);

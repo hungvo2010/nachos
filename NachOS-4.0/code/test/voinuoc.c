@@ -18,7 +18,7 @@ void main()
 		Wait("m_vn");
 
 		// Mo file result.txt de ghi voi nao su dung
-		fileid_result = Open("result.txt", 0);
+		fileid_result = Open("../test/result.txt", 0);
 		if(fileid_result == -1)
 		{		
 			Signal("sinhvien");
@@ -30,7 +30,7 @@ void main()
 			Wait("voinuoc");
 			c_readFile = 0;			
 			// Mo file voi nuoc .txt de doc dung tich
-			fileid_voinuoc = Open("voinuoc.txt", 1);
+			fileid_voinuoc = Open("../test/voinuoc.txt", 1);
 			if(fileid_voinuoc == -1)
 			{
 				Close(fileid_result);

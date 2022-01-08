@@ -21,7 +21,7 @@ void main()
 		Wait("sinhvien");
 		
 		// Tao file result.txt de ghi voi nao su dung
-		file_success = CreateFile("result.txt");
+		file_success = CreateFile("../test/result.txt");
 		if(file_success == -1)
 		{
 			Signal("main"); // tro ve tien trinh chinh
@@ -29,7 +29,7 @@ void main()
 		}
 
 		// Mo file sinhvien.txt len de doc
-		fileid_sinhvien = Open("sinhvien.txt", 1);
+		fileid_sinhvien = Open("../test/sinhvien.txt", 1);
 		if(fileid_sinhvien == -1)
 		{
 			Signal("main"); // tro ve tien trinh chinh
@@ -41,7 +41,7 @@ void main()
 		i_File = 0;
 	
 		// Tao file voinuoc.txt
-		file_success = CreateFile("voinuoc.txt");
+		file_success = CreateFile("../test/voinuoc.txt");
 		if(file_success == -1)
 		{
 			Close(fileid_sinhvien);
@@ -51,7 +51,7 @@ void main()
 		
 
 		// Mo file voinuoc.txt de ghi tung dung tich nuoc cua sinhvien
-		fileid_voinuoc = Open("voinuoc.txt", 0);
+		fileid_voinuoc = Open("../test/voinuoc.txt", 0);
 		if(fileid_voinuoc == -1)
 		{
 			Close(fileid_sinhvien);
@@ -87,7 +87,7 @@ void main()
 				Wait("sinhvien");
 				
 				// Tao file voinuoc.txt
-				file_success = CreateFile("voinuoc.txt");
+				file_success = CreateFile("../test/voinuoc.txt");
 				if(file_success == -1)
 				{
 					Close(fileid_sinhvien);
@@ -97,7 +97,7 @@ void main()
 		
 
 				// Mo file voinuoc.txt de ghi tung dung tich nuoc cua sinhvien
-				fileid_voinuoc = Open("voinuoc.txt", 0);
+				fileid_voinuoc = Open("../test/voinuoc.txt", 0);
 				if(fileid_voinuoc == -1)
 				{
 					Close(fileid_sinhvien);
