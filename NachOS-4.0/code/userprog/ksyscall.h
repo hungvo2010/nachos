@@ -37,15 +37,14 @@ int SysExec(int virAddr)
     {
         return -1;
     }
-    SysPrintNum(8888);
     OpenFile *file = kernel->fileSystem->Open(name);
-    SysPrintNum(8888);
     if (file == NULL)
     {
         return -1;
     }
     SysPrintNum(9999);
     delete file;
+    SysPrintNum(7777);
     int pid = pTab->ExecUpdate(name);
     return pid;
 }
