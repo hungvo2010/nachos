@@ -49,7 +49,7 @@ int PTable::ExecUpdate(char* name){
         bmsem->V();
         return -1;
     }
-    if( strcmp(name,"./test/scheduler") == 0 || strcmp(name,kernel->currentThread->getName()) == 0 )
+    if(strcmp(name,kernel->currentThread->getName()) == 0 )
 	{
 		printf("\nPTable::Exec : Can't not execute itself.\n");		
 		bmsem->V();
