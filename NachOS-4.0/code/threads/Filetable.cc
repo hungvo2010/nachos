@@ -37,6 +37,10 @@ int Filetable::CreateFile(char *filename)
     char sbuf[1024];
     // absolute path to new file
     sprintf(sbuf, "%s/%s", cwd, filename);
+    // file existed
+    if (access(sbuf, F_OK) == 0 ) {
+        return 0;
+    }
     int result = mknod(sbuf, S_IFREG | 0666, 0);
     return result != 0 ? -1 : 0;
 }

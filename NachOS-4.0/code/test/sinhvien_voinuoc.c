@@ -57,7 +57,6 @@ int main()
 		else
 			break;
 	}
-	PrintString("readsucess");
 	// Goi thuc thi tien trinh sinhvien.c
 	file_success = Exec("../test/sinhvien");
 	PrintString("execsuccess");
