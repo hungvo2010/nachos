@@ -25,7 +25,7 @@
 char *User2System(int virtAddr, int limit);
 int System2User(int virtAddr, int len, char *buffer);
 bool WillOverflow(int cur, int next);
-
+void SysPrintNum(int number);
 void SysHalt() { kernel->interrupt->Halt(); }
 
 int SysAdd(int op1, int op2) { return op1 + op2; }
