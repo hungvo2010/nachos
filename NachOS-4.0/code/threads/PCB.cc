@@ -170,6 +170,10 @@ int PCB::WriteFile(char* buffer, int charcount, OpenFileID id){
 	return this->filetable->WriteFile(buffer, charcount, id);
 }
 
+int PCB::SeekFile(int pos, OpenFileID id){
+	return this->filetable->SeekFile(pos, id);
+}
+
 int PCB::CloseFile(OpenFileID id){
 	return this->filetable->CloseFile(id);
 }

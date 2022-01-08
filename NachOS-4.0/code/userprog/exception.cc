@@ -169,6 +169,21 @@ void ExceptionHandler(ExceptionType which) {
                 
                 case SC_Seek:
                     {
+                        result = SysSeekFile(kernel->machine->ReadRegister(4), 
+                        kernel->machine->ReadRegister(5));
+                        
+                        DEBUG(dbgSys, "SeekFile returning with " << result << "\n");
+                        /* Prepare Result */
+                        kernel->machine->WriteRegister(2, (int)result);
+
+                        /* Modify return point */
+                        IncPCReg();
+
+                        return;
+
+                        ASSERTNOTREACHED();
+                        break;
+
                         int pos = machine->ReadRegister(4); // Lay vi tri can chuyen con tro den trong file
 			            int id = machine->ReadRegister(5); // Lay id cua file
                         if (id < 2 || id >= MAX_FILE)

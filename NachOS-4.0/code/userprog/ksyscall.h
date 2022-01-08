@@ -110,10 +110,22 @@ int SysOpenFile(int virAddr, int type){
     return result;
 }
 
+int SysSeekFile(int pos, int id){
+    // id < 0: not valid, id = 0: output to screen, id = 1: read from keyboard, id >= MAX_FILE: not valid
+    if (id < 2 || id >= MAX_FILE){
+        return -1;
+    }
+
+    int processId = kernel->currentThread->processID;
+    PCB* curProccess = pTab->GetPCB(processId);
+    int result = curProccess->SeekFile(pos, id);
+    return result;
+}
+
 // Cai dat cua ham CloseFile, duoc goi trong exception.cc
 int SysCloseFile(int id){
     // id < 0: not valid, id = 0: output to screen, id = 1: read from keyboard, id >= MAX_FILE: not valid
-    if (id <= 0 || id == 1 || id >= MAX_FILE){
+    if (id < 2 || id >= MAX_FILE){
         return -1;
     }
 

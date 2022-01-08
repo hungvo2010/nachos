@@ -83,6 +83,26 @@ int Filetable::WriteFile(char* buffer, int charcount, OpenFileID id){
     return result;
 }
 
+int Filetable::SeekFile(int pos, OpenFileID id){
+    if (!bm->Test(id)){
+        return -1;
+    }
+    int curPos = ftell(file[id]);
+    int lengthFile = 0;
+    fseek(file[id], 0, SEEK_END);
+    lengthFile = ftell(file[id]);
+    fseek(file[id], curPos, SEEK_SET);
+
+    pos = pos == -1 ? lengthFile : pos;
+    if (pos > lengthFile || pos < 0){
+        return -1;
+    }
+    else {
+        fseek(file[id], pos, SEEK_SET);
+        return pos;
+    }
+}
+
 int Filetable::CloseFile(OpenFileID id){
     if (!bm->Test(id)){
         // file not opened yet

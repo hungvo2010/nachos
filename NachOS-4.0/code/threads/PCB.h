@@ -37,6 +37,7 @@ class PCB {
         OpenFileID OpenFile(char* filename, int type);
         int ReadFile(char* buffer, int charcount, OpenFileID id);
         int WriteFile(char* buffer, int charcount, OpenFileID id);
+        int SeekFile(int pos, OpenFileID id);
         int CloseFile(OpenFileID id);
 
     private:
