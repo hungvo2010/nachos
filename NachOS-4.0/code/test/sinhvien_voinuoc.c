@@ -25,8 +25,8 @@ int main()
 
 	// create file output.txt
 	file_success = CreateFile("../test/output.txt");
-	if (file_success == -1)
-		return 1;
+	// if (file_success == -1)
+	// 	return 1;
 
 	// open file input.txt	for read only
 	fileid_input = Open("../test/input.txt", 1);
