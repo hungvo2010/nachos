@@ -39,6 +39,7 @@ int SysExec(int virAddr){
     if (file == NULL){
         return -1;
     }
+    SysPrintNum(9999);
     delete file;
     int pid = pTab->ExecUpdate(name);
     return pid;
