@@ -98,8 +98,8 @@ bool
 AddrSpace::Load(char *fileName) 
 {
     NoffHeader noffH;
-    int numCodePage, numDataPage;
-    int lastCodePageSize, lastDataPageSize, firstDataPageSize, tempDataSize;
+    int num_code_page, num_data_page;
+    int last_code_page_size, last_data_page_size, first_data_page_size, temp_data_size;
     OpenFile *executable = kernel->fileSystem->Open(fileName);
     unsigned int size;
 
@@ -154,20 +154,20 @@ AddrSpace::Load(char *fileName)
     
     kernel->addrLock->Release(); 
     // Calculate numCodePage and numDataPage
-    numCodePage = divRoundUp(noffH.code.size, PageSize); 
+    num_code_page = divRoundUp(noffH.code.size, PageSize); 
 
     // Calculate lastCodePageSize
-    lastCodePageSize = noffH.code.size - (numCodePage-1)*PageSize;
-    tempDataSize = noffH.initData.size - (PageSize - lastCodePageSize); 
+    last_code_page_size = noffH.code.size - (num_code_page-1)*PageSize;
+    temp_data_size = noffH.initData.size - (PageSize - last_code_page_size); 
 
-    if (tempDataSize < 0){
-        numDataPage = 0;
-        firstDataPageSize = noffH.initData.size;
+    if (temp_data_size < 0){
+        num_data_page = 0;
+        first_data_page_size = noffH.initData.size;
     } 
     else{
-        numDataPage = divRoundUp(tempDataSize, PageSize);
-        lastDataPageSize = tempDataSize - (numDataPage-1)*PageSize;
-        firstDataPageSize = PageSize - lastCodePageSize;
+        num_data_page = divRoundUp(temp_data_size, PageSize);
+        last_data_page_size = temp_data_size - (num_data_page-1)*PageSize;
+        first_data_page_size = PageSize - last_code_page_size;
     } 
 
     
@@ -180,34 +180,34 @@ AddrSpace::Load(char *fileName)
     // Copy the Code segment into memory
     DEBUG(dbgAddr, "Initializing code segment.");
 	DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-    for (i = 0; i < numCodePage; i++) 
+    for (i = 0; i < num_code_page; i++) 
     {
         // if(noffH.code.size > 0)
         executable->ReadAt(&(kernel->machine->mainMemory[noffH.code.virtualAddr]) + 
-        pageTable[i].physicalPage*PageSize, i<(numCodePage-1) ? PageSize : lastCodePageSize,
+        pageTable[i].physicalPage*PageSize, i<(num_code_page-1) ? PageSize : last_code_page_size,
         noffH.code.inFileAddr + i*PageSize);
     }
 
     //Check whether last page of code segment is full and copy the first part of
     //initData segment into this page
-    if (lastCodePageSize < PageSize)
+    if (last_code_page_size < PageSize)
     {
         // Copy initData into the remain part of lastCodePage
-        if (firstDataPageSize > 0) 
+        if (first_data_page_size > 0) 
         executable->ReadAt(&(kernel->machine->mainMemory[noffH.code.virtualAddr])+(pageTable[i-1].physicalPage*PageSize + 
-            lastCodePageSize), firstDataPageSize, noffH.initData.inFileAddr);
+            last_code_page_size), first_data_page_size, noffH.initData.inFileAddr);
     } 
 
     DEBUG(dbgAddr, "Initializing data segment.");
 	DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
     int j = 0;
     // Copy the remain of initData segment into memory
-    for (j = 0; j< numDataPage; j++) 
+    for (j = 0; j< num_data_page; j++) 
     {
         // if(noffH.initData.size > 0)
         executable->ReadAt(&(kernel->machine->mainMemory[noffH.code.virtualAddr])+pageTable[i].physicalPage*PageSize,
-        j < (numDataPage-1) ? PageSize : lastDataPageSize,
-        noffH.initData.inFileAddr + j*PageSize + firstDataPageSize);
+        j < (num_data_page-1) ? PageSize : last_data_page_size,
+        noffH.initData.inFileAddr + j*PageSize + first_data_page_size);
         i++;
     }
 

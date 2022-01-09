@@ -1,20 +1,22 @@
 /* ascii.c
- * In ra cac ky tu thuoc bang ma ascii, chi in cac ky tu in duoc
+ *	Test rogram to print the ascii table.
+ *	
+ *	Just do PrintChar syscall.
+ *
  */
 
 #include "syscall.h"
 
-int main() {
-    char* tab = "\t";
-    char* newline = "\n";
-    int i = 0;
-    for (i = 33; i < 128; ++i) {
-        PrintNum(i);
-        PrintString(tab);
-        PrintChar((char)i);
-        PrintString(newline);
-    }
-
-    Halt();
-    /* not reached */
+int 
+main()
+{
+	int i;
+	char c;
+	for (i = 32; i <= 126; ++i)
+	{
+		c = (char)i;
+		PrintChar(c);
+		PrintChar('\n');
+	}
+	Halt();
 }

@@ -11,8 +11,8 @@ int main() {
     int i = 0;
 
     CreateSemaphore(semaphore_name, 1);
-    fd1 = Open(inputFile, 1);
-    Create(outputFile);
+    fd1 = Open(inputFile, 0);
+    CreateFile(outputFile);
     Read(tmp, 1, fd1);  // n < 5
     n_sinhvien = tmp[0] - '0';
 
@@ -22,14 +22,7 @@ int main() {
     for (i = 0; i < n_sinhvien; ++i)
         Join(pid[i]);
 
-    Read(tmp, 1, 0);
-    n_sinhvien = tmp[0] - '0';
-
-    for (i = 0; i < n_sinhvien; ++i)
-        pid[i] = Exec(sinhvien_execuatable);
-
-    for (i = 0; i < n_sinhvien; ++i)
-        Join(pid[i]);
+    Close(fd1);
 
     return 0;
 }

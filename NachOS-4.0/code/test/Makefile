@@ -112,91 +112,25 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add halt matmult sort segments help ascii sinhvien voinuoc ping pong schedule
+PROGRAMS := add halt shell matmult sort segments printnum readnum printchar randomnum readstring ascii mysort help create open read write exec semaphore ping pong sinhvien voinuoc
+SOURCES := $(PROGRAMS:=.c)
+OBJECTS := $(PROGRAMS:=.o)
+COFF_PROGRAMS := $(PROGRAMS:=.coff)
 endif
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) clean
+
+$(PROGRAMS): $(COFF_PROGRAMS)
+	$(COFF2NOFF) $(@:=.coff) $@
+
+$(COFF_PROGRAMS): start.o $(OBJECTS)
+	$(LD) $(LDFLAGS) start.o $(@:.coff=.o) -o $@
+
+$(OBJECTS): $(SOURCES) 
+	$(CC) $(CFLAGS) -c $(@:.o=.c)
 
 start.o: start.S ../userprog/syscall.h
 	$(CC) $(CFLAGS) $(ASFLAGS) -c start.S
-
-halt.o: halt.c
-	$(CC) $(CFLAGS) -c halt.c
-halt: halt.o start.o
-	$(LD) $(LDFLAGS) start.o halt.o -o halt.coff
-	$(COFF2NOFF) halt.coff halt
-
-add.o: add.c
-	$(CC) $(CFLAGS) -c add.c
-add: add.o start.o
-	$(LD) $(LDFLAGS) start.o add.o -o add.coff
-	$(COFF2NOFF) add.coff add
-
-shell.o: shell.c
-	$(CC) $(CFLAGS) -c shell.c
-shell: shell.o start.o
-	$(LD) $(LDFLAGS) start.o shell.o -o shell.coff
-	$(COFF2NOFF) shell.coff shell
-
-sort.o: sort.c
-	$(CC) $(CFLAGS) -c sort.c
-sort: sort.o start.o
-	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
-	$(COFF2NOFF) sort.coff sort
-
-help.o: help.c
-	$(CC) $(CFLAGS) -c help.c
-help: help.o start.o
-	$(LD) $(LDFLAGS) start.o help.o -o help.coff
-	$(COFF2NOFF) help.coff help
-
-ascii.o: ascii.c
-	$(CC) $(CFLAGS) -c ascii.c
-ascii: ascii.o start.o
-	$(LD) $(LDFLAGS) start.o ascii.o -o ascii.coff
-	$(COFF2NOFF) ascii.coff ascii
-
-sinhvien.o: sinhvien.c
-	$(CC) $(CFLAGS) -c sinhvien.c
-sinhvien: sinhvien.o start.o
-	$(LD) $(LDFLAGS) start.o sinhvien.o -o sinhvien.coff
-	$(COFF2NOFF) sinhvien.coff sinhvien
-
-voinuoc.o: voinuoc.c
-	$(CC) $(CFLAGS) -c voinuoc.c
-voinuoc: voinuoc.o start.o
-	$(LD) $(LDFLAGS) start.o voinuoc.o -o voinuoc.coff
-	$(COFF2NOFF) voinuoc.coff voinuoc
-
-ping.o: ping.c
-	$(CC) $(CFLAGS) -c ping.c
-ping: ping.o start.o
-	$(LD) $(LDFLAGS) start.o ping.o -o ping.coff
-	$(COFF2NOFF) ping.coff ping
-
-pong.o: pong.c
-	$(CC) $(CFLAGS) -c pong.c
-pong: pong.o start.o
-	$(LD) $(LDFLAGS) start.o pong.o -o pong.coff
-	$(COFF2NOFF) pong.coff pong
-
-schedule.o: schedule.c
-	$(CC) $(CFLAGS) -c schedule.c
-schedule: schedule.o start.o
-	$(LD) $(LDFLAGS) start.o schedule.o -o schedule.coff
-	$(COFF2NOFF) schedule.coff schedule
-
-segments.o: segments.c
-	$(CC) $(CFLAGS) -c segments.c
-segments: segments.o start.o
-	$(LD) $(LDFLAGS) start.o segments.o -o segments.coff
-	$(COFF2NOFF) segments.coff segments
-
-matmult.o: matmult.c
-	$(CC) $(CFLAGS) -c matmult.c
-matmult: matmult.o start.o
-	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
-	$(COFF2NOFF) matmult.coff matmult
 
 clean:
 	$(RM) -f *.o *.ii

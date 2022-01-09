@@ -18,35 +18,36 @@
 /* system call codes -- used by the stubs to tell the kernel which system call
  * is being asked for
  */
-#define SC_Halt		0
-#define SC_Exit		1
-#define SC_Exec		2
-#define SC_Join		3
-#define SC_Create	4
-#define SC_Remove       5
-#define SC_Open		6
-#define SC_Read		7
-#define SC_Write	8
-#define SC_Seek         9
-#define SC_Close	10
-#define SC_ThreadFork	11
-#define SC_ThreadYield	12
-#define SC_ExecV	13
-#define SC_ThreadExit   14
-#define SC_ThreadJoin   15
+#define SC_Halt 0
+#define SC_Exit 1
+#define SC_Exec 2
+#define SC_Join 3
+#define SC_Create 4
+#define SC_Remove 5
+#define SC_Open 6
+#define SC_Read 7
+#define SC_Write 8
+#define SC_Seek 9
+#define SC_Close 10
+#define SC_ThreadFork 11
+#define SC_ThreadYield 12
+#define SC_ExecV 13
+#define SC_ThreadExit 14
+#define SC_ThreadJoin 15
+#define SC_CreateSemaphore 16
+#define SC_Wait 17
+#define SC_Signal 18
 
-#define SC_Add		42
-#define SC_ReadNum	80
-#define SC_PrintNum	81
-#define SC_ReadChar	82
-#define SC_PrintChar	83
-#define SC_RandomNum	84
-#define SC_ReadString	85
-#define SC_PrintString	86
+#define SC_Add 42
+#define SC_ReadNum 43
+#define SC_PrintNum 44
+#define SC_ReadChar 45
+#define SC_PrintChar 46
+#define SC_RandomNum 47
+#define SC_ReadString 48
+#define SC_PrintString 49
 
-#define SC_CreateSemaphore 100
-#define SC_Wait 101
-#define SC_Signal 102
+#define SC_CreateFile 50
 
 #define SC_GetPID 120
 
@@ -125,6 +126,7 @@ typedef int OpenFileId;
 /* Note: Create does not open the file.   */
 /* Return 1 on success, negative error code on failure */
 int Create(char *filename);
+int CreateFile(char* filename);
 
 /* Remove a Nachos file, with name "name" */
 int Remove(char *name);
@@ -220,7 +222,7 @@ void ReadString(char* buffer, int length);
 /*
  * Print buffer (char*) to console.
  */
-void PrintString(char* buffer);
+void PrintString(char* buffer, int length);
 
 int CreateSemaphore(char* name, int val);
 

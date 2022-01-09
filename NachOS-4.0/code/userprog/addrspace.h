@@ -16,7 +16,7 @@
 #include "copyright.h"
 #include "filesys.h"
 
-#define UserStackSize		1024 	// Increase this as necessary!
+#define UserStackSize		1024 	// increase this as necessary!
 
 class AddrSpace {
   public:
@@ -25,10 +25,10 @@ class AddrSpace {
 
     bool Load(char *fileName);		// Load a program into addr space from
                                         // a file
-					// Return false if not found
+					// return false if not found
 
     void Execute();             	// Run a program
-					// Assumes the program has already
+					// assumes the program has already
                                         // been loaded
 
     void SaveState();			// Save/restore address space-specific

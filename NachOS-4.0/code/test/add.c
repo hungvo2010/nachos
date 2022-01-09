@@ -7,10 +7,13 @@
 
 #include "syscall.h"
 
-int main()
+int
+main()
 {
-  int result = Create("output.txt");
-  PrintNum(result);
+  int result;
+  
+  result = Add(42, 23);
+
   Halt();
   /* not reached */
 }
