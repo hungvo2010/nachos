@@ -4,7 +4,7 @@
 #define PCB_H
 #include "thread.h"
 #include "synch.h"
-#define MAX_FILE_1_PROCESS 10
+#define MAX_FILE 10
 class Semaphore;
 class PCB{
 private:
@@ -15,8 +15,8 @@ private:
     Thread *thread;
     int pid;
     int numwait; // số tiến trình đã join
-    OpenFile* FileDescriptorTable[MAX_FILE_1_PROCESS];
-    Bitmap* fdBitmap;
+    OpenFile* filetable[MAX_FILE];
+    Bitmap* fileBitmap;
     AddrSpace *space;
 public:
     int parentID; //ID của tiến trình cha

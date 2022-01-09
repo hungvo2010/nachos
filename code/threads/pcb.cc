@@ -1,47 +1,48 @@
 #include "pcb.h"
 
-PCB::PCB(int id)
-{
+PCB::PCB(int id){
 	pid = id;
-	joinsem = new Semaphore("Join Semaphore", 0);
-	exitsem = new Semaphore("Exit Semaphore", 0);
-	mutex = new Semaphore("Condition Semaphore", 1);
+	this->joinsem = new Semaphore("joinsem",0);
+	this->exitsem = new Semaphore("exitsem",0);
+	this->multex = new Semaphore("multex",1);
 
-	FileDescriptorTable[0] = kernel->fileSystem->OpenFileTable[0];
-	FileDescriptorTable[1] = kernel->fileSystem->OpenFileTable[1];
+	this->filetable[0] = kernel->fileSystem->filetable[0];
+	this->filetable[1] = kernel->fileSystem->filetable[1];
 
-	fdBitmap = new Bitmap(MAX_FILE_1_PROCESS);
-	fdBitmap->Mark(0);
-	fdBitmap->Mark(1);
+	this->fileBitmap = new Bitmap(MAX_FILE);
+	this->fileBitmap->Mark(0);
+	this->fileBitmap->Mark(1);
 
 }
 PCB::~PCB()
 {
-	delete joinsem;
-	delete exitsem;
-	delete mutex;
-	delete fdBitmap;
+	if(joinsem != NULL)
+		delete this->joinsem;
+	if(exitsem != NULL)
+		delete this->exitsem;
+	if(multex != NULL)
+		delete this->multex;
+	if(fileBitmap) delete fileBitmap;
 
 	if (thread) delete thread;
 }
 
-int PCB::GetID() { return pid; }
-int PCB::GetNumWait(){return numwait;}
 void PCB::JoinWait()
 {
-	joinsem->P();
+	//Gọi joinsem->P() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ JoinRelease để thực hiện tiếp.
+    joinsem->P();
 }
-void PCB::ExitWait()
-{
-	exitsem->P();
-}
+
 void PCB::JoinRelease()
-{
-	joinsem->V();
+{ 
+	// Gọi joinsem->V() để giải phóng tiến trình gọi JoinWait().
+    joinsem->V();
 }
-void PCB::ExitRelease()
-{
-	exitsem->V();
+
+void PCB::ExitWait()
+{ 
+	// Gọi exitsem-->V() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ ExitReleaseđể thực hiện tiếp.
+    exitsem->P();
 }
 void PCB::IncNumWait()
 {
@@ -57,7 +58,6 @@ void PCB::DecNumWait()
 }
 void PCB::SetExitCode(int ec) { exitcode = ec; }
 int PCB::GetExitCode() { return exitcode; }
-Thread* PCB::getThread() { return thread; }
 
 void StartProcess_2(int id);
 int PCB::Exec(char *filename, int id)
@@ -108,28 +108,32 @@ void StartProcess_2(int id)
 
 bool PCB::isFileTableFull()
 {
-	return fdBitmap->NumClear() == 0;
+	return fileBitmap->NumClear() == 0;
 }
 
 int PCB::Open(OpenFile* new_file)
 {
 	if (isFileTableFull()) return -1;
-	int free_slot = fdBitmap->FindAndSet();
-	FileDescriptorTable[free_slot] = new_file;
-	return free_slot;
+	int id = fileBitmap->FindAndSet();
+	filetable[id] = new_file;
+	return id;
 }
 
-OpenFile*  PCB::Close(int file_id)
+OpenFile*  PCB::Close(int id)
 {
-	if (!fdBitmap->Test(file_id)) return NULL;
-	OpenFile* tmp = FileDescriptorTable[file_id];
-	fdBitmap->Clear(file_id);
-	FileDescriptorTable[file_id] = NULL;
-	return tmp;
+	if (!fileBitmap->Test(id)) return NULL;
+	OpenFile* file = filetable[id];
+	fileBitmap->Clear(id);
+	filetable[id] = NULL;
+	return file;
 }
 
-OpenFile* PCB::GetFile(int file_id)
+OpenFile* PCB::GetFile(int id)
 {
-	if (!fdBitmap->Test(file_id)) return NULL;
-	return FileDescriptorTable[file_id];
+	if (!fileBitmap->Test(id)) return NULL;
+	return filetable[id];
 }
+
+int PCB::GetID() { return pid; }
+int PCB::GetNumWait(){return numwait;}
+Thread* PCB::getThread() { return thread; }

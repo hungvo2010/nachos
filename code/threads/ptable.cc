@@ -2,9 +2,13 @@
 
 PTable::PTable(int size)
 {
-    bm = new Bitmap(MAXPROCESS);
-    bmsem = new Semaphore("Semaphorebitmap", 1);
-    psize = size;
+    if (size < 0)
+        return;
+
+    this->psize = size;
+    this->bm = new Bitmap(size);
+    this->bmsem = new Semaphore("bmsem", 1);
+
     pcb[0] = new PCB(0);
     bm->Mark(0);
 }
@@ -82,7 +86,7 @@ int PTable::ExecUpdate(char *name)
 
 int PTable::JoinUpdate(int childpid)
 {
-    if (childpid < 0 || childpid >= MAXPROCESS)
+    if (childpid < 0 || childpid >= MAX_PROCESS)
         return -1;
     if (bm->Test(childpid) == 0)
         return -1;
