@@ -23,14 +23,5 @@ int main()
     for (i = 0; i < n_sinhvien; ++i)
         Join(pid[i]);
 
-    Read(tmp, 1, 0);
-    n_sinhvien = tmp[0] - '0';
-
-    for (i = 0; i < n_sinhvien; ++i)
-        pid[i] = Exec(sinhvien_execuatable);
-
-    for (i = 0; i < n_sinhvien; ++i)
-        Join(pid[i]);
-
     return 0;
 }
