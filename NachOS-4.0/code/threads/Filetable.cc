@@ -5,14 +5,8 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-int min(int a, int b)
-{
-    return a < b ? a : b;
-}
-int max(int a, int b)
-{
-    return a > b ? a : b;
-}
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 
 Filetable::Filetable()
 {

@@ -15,6 +15,11 @@
         "utility": "cpp",
         "typeinfo": "cpp",
         "memory_resource": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "string_view": "cpp",
+        "algorithm": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "numeric": "cpp"
     }
 }
