@@ -20,14 +20,10 @@ int main()
         fd1 = Open(outputFile, 2); // append
 
         buffer[0] = (char)('0' + pid);
-        rand_num = RandomNum();
-        rand_num = rand_num % 2 + 1;
-        if (rand_num > 10 - current_amount) rand_num = 10 - current_amount;
-        for (i = 0; i < rand_num; ++i)
-        {
-            Write(buffer, 2, fd1);
-            current_amount++;
-        }
+        rand_num = RandomNum() % 10000;
+        for (i = 0; i < rand_num; ++i);
+	    Write(buffer, 2, fd1);
+        current_amount++;
 
         Close(fd1);
         Signal(semaphore_name);
