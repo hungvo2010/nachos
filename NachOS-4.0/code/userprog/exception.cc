@@ -22,10 +22,11 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
-#include "ksyscall.h"
 #include "main.h"
+#include "synchconsole.h"
 #include "syscall.h"
-// ----------------------------------------------------------------------
+#include "ksyscall.h"
+//----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
 //	is executing, and either does a syscall, or generates an addressing
@@ -48,438 +49,324 @@
 //	is in machine.h.
 //----------------------------------------------------------------------
 
-/* Ham tang gia tri thanh ghi PC sau khi goi syscall. */
-void IncPCReg() {
-    /* set previous programm counter (debugging only)*/
-    kernel->machine->WriteRegister(PrevPCReg,
-                                   kernel->machine->ReadRegister(PCReg));
+void IncPC()
+{
+	/* set previous programm counter (debugging only)*/
+	kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
-    /* set programm counter to next instruction (all Instructions are 4 byte
-     * wide)*/
-    kernel->machine->WriteRegister(PCReg,
-                                   kernel->machine->ReadRegister(PCReg) + 4);
+	/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 
-    /* set next programm counter for brach execution */
-    kernel->machine->WriteRegister(NextPCReg,
-                                   kernel->machine->ReadRegister(PCReg) + 4);
+	/* set next programm counter for brach execution */
+	kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
 }
+#define MAX_FILE_LENGTH 50
+void ExceptionHandler(ExceptionType which)
+{
+	int type = kernel->machine->ReadRegister(2);
 
-void ExceptionHandler(ExceptionType which) {
-    int type = kernel->machine->ReadRegister(2);
-    int result;
-    char charResult;
-
-    DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
-
-    switch (which) {
-            /* No exeption: Khong lam gi */
-        case NoException:
-            return;
-
-            /* SyscallException: Bat va xu ly cac truong hop syscall duoc goi */
-        case SyscallException:
-            switch (type) {
-                case SC_Halt:  // Ngat he thong
-                    DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
-
-                    SysHalt();
-
-                    ASSERTNOTREACHED();
-                    break;
-                
-                case SC_CreateFile:  // Tao file
-                    {
-                    DEBUG(dbgSys,
-                          "CreateFile " << kernel->machine->ReadRegister(4) << "\n");
-
-                    /* Process Sys_Create Systemcall*/
-
-                    result = SysCreateFile(kernel->machine->ReadRegister(4));
-                        /* char* filename */
-                        
-                    DEBUG(dbgSys, "CreateFile returning with " << result << "\n");
-                    /* Prepare Result */
-                    kernel->machine->WriteRegister(2, (int)result);
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-                    }
-
-                case SC_Open:
-                    {          
-                        //OpenFileID Open(char *name, int type)
-                        DEBUG(dbgSys,
-                          "OpenFile " << kernel->machine->ReadRegister(4) << "\n" <<
-                            kernel->machine->ReadRegister(5));
-                        result = SysOpenFile(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
-                        
-                        DEBUG(dbgSys, "OpenFile returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
-
-                        return;
-
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-
-                case SC_Read:
-                    {
-                        result = SysReadFile(kernel->machine->ReadRegister(4), 
-                        kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
-                        
-                        DEBUG(dbgSys, "ReadFile returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
-
-                        return;
-
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-
-                case SC_Write:
-                    {
-                        result = SysWriteFile(kernel->machine->ReadRegister(4), 
-                        kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
-                        
-                        DEBUG(dbgSys, "WriteFile returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
-
-                        return;
-
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-                
-                case SC_Seek:
-                    {
-                        result = SysSeekFile(kernel->machine->ReadRegister(4), 
-                        kernel->machine->ReadRegister(5));
-                        
-                        DEBUG(dbgSys, "SeekFile returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
+	DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
 
-                        return;
-
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-
-                case SC_Close:
-                    {
-                        result = SysCloseFile(kernel->machine->ReadRegister(4));
-
-                        DEBUG(dbgSys, "CloseFile returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
+	switch (which)
+	{
 
-                        return;
-
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-
-                case SC_Exec:
-                    {
-                        result = SysExec(kernel->machine->ReadRegister(4));
-
-                        DEBUG(dbgSys, "Exec returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
-
-                        return;
+	case NoException:
+		/* set previous programm counter (debugging only)*/
+		kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+		/* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+		kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+		/* set next programm counter for brach execution */
+		kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+		return;
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-
-                case SC_Join:
-                    {
-                        result = SysJoin(kernel->machine->ReadRegister(4));
-
-                        DEBUG(dbgSys, "Join returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
-
-                        /* Modify return point */
-                        IncPCReg();
-
-                        return;
+	case SyscallException:
+		switch (type)
+		{
+		case SC_Halt:
+			DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
+			SysHalt();
+			ASSERTNOTREACHED();
+			break;
 
-                case SC_Exit:
-                    {
-                        result = kernel->machine->ReadRegister(4);
+		case SC_Add:
+			DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
+			int result;
+			result = SysAdd((int)kernel->machine->ReadRegister(4), (int)kernel->machine->ReadRegister(5));
 
-                        if (result!=0){
-                            IncPCReg();
-                            return;
+			DEBUG(dbgSys, "Add returning with " << result << "\n");
+			/* Prepare Result */
+			kernel->machine->WriteRegister(2, (int)result);
 
-                            ASSERTNOTREACHED();
-                            break;
-                        }
+			IncPC();
 
-                        // DEBUG(dbgSys, "Join returning with " << result << "\n");
-                        /* Prepare Result */
-                        // kernel->machine->WriteRegister(2, (int)result);
-                        pTab->ExitUpdate(result);
-                        kernel->currentThread->FreeSpace();
-                        kernel->currentThread->Finish();
+			return;
 
-                        /* Modify return point */
-                        IncPCReg();
+		case SC_PrintNum:
 
-                        return;
+			DEBUG(dbgSys, "PrintNum Exception " << kernel->machine->ReadRegister(4) << "\n");
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
-                
-                case SC_CreateSemaphore:
-                    {
-                        result = SysCreateSemaphore(kernel->machine->ReadRegister(4),
-                        kernel->machine->ReadRegister(5));
+			SysPrintNum((int)kernel->machine->ReadRegister(4));
 
-                        DEBUG(dbgSys, "CreateSemaphore returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
+			IncPC();
+			return;
 
-                        /* Modify return point */
-                        IncPCReg();
+		case SC_ReadNum:
 
-                        return;
+			DEBUG(dbgSys, "ReadNum Exception \n");
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
+			result = SysReadNum();
 
-                case SC_Wait:
-                    {
-                        result = SysWait(kernel->machine->ReadRegister(4));
-                        DEBUG(dbgSys, "Wait returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
+			DEBUG(dbgSys, "ReadNum returning with " << result << "\n");
+			kernel->machine->WriteRegister(2, (int)result);
 
-                        /* Modify return point */
-                        IncPCReg();
+			IncPC();
+			return;
 
-                        return;
+		case SC_PrintChar:
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
+			DEBUG(dbgSys, "PrintChar Exception" << (char)kernel->machine->ReadRegister(4) << "\n");
 
-                case SC_Signal:
-                    {
-                        result = SysSignal(kernel->machine->ReadRegister(4));
-                        DEBUG(dbgSys, "Wait returning with " << result << "\n");
-                        /* Prepare Result */
-                        kernel->machine->WriteRegister(2, (int)result);
+			SysPrintChar((char)kernel->machine->ReadRegister(4));
 
-                        /* Modify return point */
-                        IncPCReg();
+			IncPC();
+			return;
 
-                        return;
+		case SC_ReadChar:
 
-                        ASSERTNOTREACHED();
-                        break;
-                    }
+			DEBUG(dbgSys, "ReadChar Exception \n");
 
-                case SC_Add:  // Duoc cai dat san
-                    DEBUG(dbgSys,
-                          "Add " << kernel->machine->ReadRegister(4) << " + "
-                                 << kernel->machine->ReadRegister(5) << "\n");
+			result = SysReadChar();
 
-                    /* Process SysAdd Systemcall*/
-                    result = SysAdd(
-                        /* int op1 */ (int)kernel->machine->ReadRegister(4),
-                        /* int op2 */ (int)kernel->machine->ReadRegister(5));
+			DEBUG(dbgSys, "ReadChar returning with " << result << "\n");
+			kernel->machine->WriteRegister(2, (int)result);
 
-                    DEBUG(dbgSys, "Add returning with " << result << "\n");
-                    /* Prepare Result */
-                    kernel->machine->WriteRegister(2, (int)result);
+			IncPC();
+			return;
 
-                    /* Modify return point */
-                    IncPCReg();
+		case SC_RandomNum:
 
-                    return;
+			DEBUG(dbgSys, "RandomNum Exception \n");
 
-                    ASSERTNOTREACHED();
-                    break;
+			result = SysRandomNum();
 
-                case SC_ReadNum:  // Syscall doc so nguyen
-                    DEBUG(dbgSys, "Read integer from console input\n");
+			DEBUG(dbgSys, "RandomNum returning with " << result << "\n");
+			kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Process SysReadNum Systemcall */
+			IncPC();
+			return;
 
-                    result = SysReadNum();
+		case SC_PrintString:
 
-                    DEBUG(dbgSys, "Read returning with " << result << "\n");
+			DEBUG(dbgSys, "PrintString Exception \n");
 
-                    /* Prepare Result */
-                    kernel->machine->WriteRegister(2, (int)result);
+			int buffer_address;
+			buffer_address = (int)kernel->machine->ReadRegister(4);
+			int buffer_length;
+			buffer_length = (int)kernel->machine->ReadRegister(5);
 
-                    /* Modify return point */
-                    IncPCReg();
+			DEBUG(dbgSys, "PrintString Exception with buffer_address: " << buffer_address << ", buffer length: " << buffer_length << "\n");
+			SysPrintString(buffer_address, buffer_length);
 
-                    return;
+			IncPC();
+			return;
 
-                    ASSERTNOTREACHED();
-                    break;
+		case SC_ReadString:
 
-                case SC_PrintNum:  // Syscall in so nguyen
-                    DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
-                                           << " to console output\n");
+			DEBUG(dbgSys, "ReadString Exception \n");
 
-                    /* Process SysPrintNum Systemcall */
+			buffer_address = (int)kernel->machine->ReadRegister(4);
+			buffer_length = (int)kernel->machine->ReadRegister(5);
 
-                    SysPrintNum((int)kernel->machine->ReadRegister(4));
+			DEBUG(dbgSys, "ReadString Exception with buffer_address: " << buffer_address << ", buffer length: " << buffer_length << "\n");
+			SysReadString(buffer_address, buffer_length);
 
-                    DEBUG(dbgSys, "Print completed\n");
+			IncPC();
+			return;
 
-                    /* Modify return point */
-                    IncPCReg();
+		case SC_Create:
 
-                    return;
+			DEBUG(dbgSys, "Create file Exception \n");
+			int filename_address;
+			filename_address = (int)kernel->machine->ReadRegister(4);
 
-                    ASSERTNOTREACHED();
-                    break;
+			char *filename;
+			filename = User2System(filename_address, MAX_FILE_LENGTH);
+			DEBUG(dbgSys, "Create file Exception : " << filename_address << "\n");
 
-                case SC_ReadChar:  // Syscall doc ky tu
-                    DEBUG(dbgSys, "Read char from console input\n");
+			result = SysCreatefile(filename);
+			kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Process SysReadChar Systemcall */
+			IncPC();
+			return;
 
-                    charResult = SysReadChar();
+		case SC_Open:
 
-                    DEBUG(dbgSys, "Read returning with " << charResult << "\n");
+			DEBUG(dbgSys, "Open file Exception \n");
+			filename_address = (int)kernel->machine->ReadRegister(4);
+			int type;
+			type = (int)kernel->machine->ReadRegister(5);
 
-                    kernel->machine->WriteRegister(2, (int)charResult);
+			filename = User2System(filename_address, MAX_FILE_LENGTH);
 
-                    /* Modify return point */
-                    IncPCReg();
+			result = SysOpenfile(filename, type);
+			kernel->machine->WriteRegister(2, (int)result);
 
-                    return;
+			IncPC();
+			return;
 
-                    ASSERTNOTREACHED();
-                    break;
+		case SC_Read:
 
-                case SC_PrintChar:  // Syscall in ky tu
-                    DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
-                                           << " to console output\n");
-                    /* Process SysPrintChar Systemcall */
-
-                    SysPrintChar((char)kernel->machine->ReadRegister(4));
-
-                    DEBUG(dbgSys, "Print completed\n");
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-
-                case SC_RandomNum:  // Syscall tao so nguyen ngau nhien
-                    DEBUG(dbgSys, "Random number");
-                    /* Process SysRandomNum Systemcall */
-
-                    result = SysRandomNum();
-
-                    DEBUG(dbgSys, "Random number: " << result << "\n");
-
-                    kernel->machine->WriteRegister(2, (int)result);
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-
-                case SC_ReadString:  // Syscall doc chuoi
-                    DEBUG(dbgSys, "Read string from console input\n");
-                    /* Process SysReadString Systemcall */
-
-                    SysReadString(kernel->machine->ReadRegister(4),
-                                  kernel->machine->ReadRegister(5));
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-
-                case SC_PrintString:  // Syscall in chuoi
-                    DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
-                                           << " to console output\n");
-                    /* Process SysPrintString Systemcall */
-
-                    SysPrintString(kernel->machine->ReadRegister(4));
-
-                    DEBUG(dbgSys, "Print completed\n");
-
-                    /* Modify return point */
-                    IncPCReg();
-
-                    return;
-
-                    ASSERTNOTREACHED();
-                    break;
-
-                    /*case SC_Exit:
-                            DEBUG(dbgSys, "Exit\n");
-
-                            IncPCReg();
-
-                            return;
-
-                            ASSERTNOTREACHED();
-                            break;*/
-
-                default:  // Cac syscall khac (khong xu ly)
-                    cerr << "Unexpected system call " << type << "\n";
-                    break;
-            }
-            break;
-
-        default:  // Cac exception khac (ngat he thong)
-            cerr << "Unexpected user mode exception" << (int)which << "\n";
+			DEBUG(dbgSys, "Read file Exception \n");
+			int file_id;
+			char *buffer;
+			buffer_address = (int)kernel->machine->ReadRegister(4);
+			buffer_length = (int)kernel->machine->ReadRegister(5);
+			file_id = (int)kernel->machine->ReadRegister(6);
+
+			result = SysReadfile(file_id, buffer_address, buffer_length);
+			kernel->machine->WriteRegister(2, (int)result);
+
+			IncPC();
+			return;
+
+		case SC_Write:
+
+			DEBUG(dbgSys, "Open file Exception \n");
+			buffer_address = (int)kernel->machine->ReadRegister(4);
+			buffer_length = (int)kernel->machine->ReadRegister(5);
+			file_id = (int)kernel->machine->ReadRegister(6);
+
+			result = SysWritefile(file_id, buffer_address, buffer_length);
+			kernel->machine->WriteRegister(2, (int)result);
+
+			IncPC();
+			return;
+
+		case SC_Close:
+
+			DEBUG(dbgSys, "Close file Exception \n");
+
+			file_id = (int)kernel->machine->ReadRegister(4);
+			DEBUG(dbgSys, "Close file Exception : " << file_id << "\n");
+
+			result = SysClosefile(file_id);
+			kernel->machine->WriteRegister(2, (int)result);
+			
+			IncPC();
+			return;
+
+		case SC_Exec:
+			DEBUG(dbgSys, "Exec file Exception \n");
+			filename_address = (int)kernel->machine->ReadRegister(4);
+			filename = User2System(filename_address, MAX_FILE_LENGTH);
+			result = SysExec(filename);
+			kernel->machine->WriteRegister(2, (int)result);
+
+			IncPC();
+			return;
+
+		case SC_Join:
+			DEBUG(dbgSys, "Join Exception \n");
+			int processID;
+			processID = (int)kernel->machine->ReadRegister(4);
+			DEBUG(dbgSys, "Join Exception: " << processID << "\n");
+			result = kernel->pTab->JoinUpdate(processID);
+			kernel->machine->WriteRegister(2, (int)result);
+
+			IncPC();
+			return;
+
+		case SC_Exit:
+			DEBUG(dbgSys, "Exit Exception \n");
+			int exit_code;
+			exit_code = (int)kernel->machine->ReadRegister(4);
+			result = kernel->pTab->ExitUpdate(exit_code);
+			kernel->machine->WriteRegister(2, (int)result);
+
+			IncPC();
+			return;
+
+		case SC_CreateSemaphore:
+			DEBUG(dbgSys, "Create Semaphore Exception \n");
+			int semaphoreName_addr, semaphoreVal;
+			semaphoreName_addr = (int)kernel->machine->ReadRegister(4);
+			semaphoreVal = (int)kernel->machine->ReadRegister(5);
+
+			char *semaphore_name;
+			semaphore_name = User2System(semaphoreName_addr, MAX_FILE_LENGTH);
+			if (semaphore_name == NULL)
+				result = -1;
+			else
+				result = kernel->semTab->Create(semaphore_name, semaphoreVal);
+			kernel->machine->WriteRegister(2, (int)result);
+			if (semaphore_name)
+			{
+				delete[] semaphore_name;
+				semaphore_name = 0;
+			}
+			IncPC();
+			return;
+
+		case SC_Signal:
+			DEBUG(dbgSys, "Up Exception \n");
+			/* Process Create file system call*/
+			semaphoreName_addr = (int)kernel->machine->ReadRegister(4);
+			semaphore_name = User2System(semaphoreName_addr, MAX_FILE_LENGTH);
+
+			if (semaphore_name == NULL)
+				result = -1;
+			else
+				result = kernel->semTab->Signal(semaphore_name);
+
+			/* Prepare Result */
+			kernel->machine->WriteRegister(2, (int)result);
+			if (semaphore_name)
+			{
+				delete[] semaphore_name;
+				semaphore_name = 0;
+			}
+			IncPC();
+			return;
+
+		case SC_Wait:
+			DEBUG(dbgSys, "Up Exception \n");
+			/* Process Create file system call*/
+			semaphoreName_addr = (int)kernel->machine->ReadRegister(4);
+			semaphore_name = User2System(semaphoreName_addr, MAX_FILE_LENGTH);
+
+			if (semaphore_name == NULL)
+				result = -1;
+			else
+				result = kernel->semTab->Wait(semaphore_name);
+			/* Prepare Result */
+			kernel->machine->WriteRegister(2, (int)result);
+			if (semaphore_name)
+			{
+				delete[] semaphore_name;
+				semaphore_name = 0;
+			}
+			IncPC();
+			return;
+
+
+		case SC_GetPID:
+			result = kernel->currentThread->processID;
+
+			kernel->machine->WriteRegister(2, (int)result);
+			IncPC();
+			return;
+
+		default:
+			cerr << "Unexpected system call " << type << "\n";
+			break;
+		}
+		break;
+	default:
+            DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
             SysHalt();
             break;
-    }
-    ASSERTNOTREACHED();
+            return;
+        }
+	ASSERTNOTREACHED();
 }

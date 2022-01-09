@@ -101,6 +101,9 @@ Kernel::Initialize()
     synchConsoleIn = new SynchConsoleInput(consoleIn); // input from stdin
     synchConsoleOut = new SynchConsoleOutput(consoleOut); // output to stdout
     synchDisk = new SynchDisk();    //
+    physicalMemory = new Bitmap(NumPhysPages);
+
+
 #ifdef FILESYS_STUB
     fileSystem = new FileSystem();
 #else
@@ -108,6 +111,9 @@ Kernel::Initialize()
 #endif // FILESYS_STUB
     postOfficeIn = new PostOfficeInput(10);
     postOfficeOut = new PostOfficeOutput(reliability);
+    addrLock = new Lock("addrLock");
+    semTab = new STable();
+    pTab = new PTable(10);
 
     interrupt->Enable();
 }

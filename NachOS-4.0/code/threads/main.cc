@@ -49,10 +49,6 @@
 // global variables
 Kernel *kernel;
 Debug *debug;
-Semaphore* addrLock;
-Bitmap* gPhysPageBitMap;
-STable* semTab;
-PTable* pTab;
 
 
 //----------------------------------------------------------------------
@@ -136,7 +132,7 @@ Print(char *name)
     int i, amountRead;
     char *buffer;
 
-    if ((openFile = kernel->fileSystem->Open(name)) == NULL) {
+    if ((openFile = kernel->fileSystem->Open(name, 1)) == NULL) {
         printf("Print: unable to open file %s\n", name);
         return;
     }
@@ -255,14 +251,6 @@ main(int argc, char **argv)
 
     kernel->Initialize();
 
-    addrLock = new Semaphore("addrLock", 1);
-
-    gPhysPageBitMap = new Bitmap(256);
-
-    pTab = new PTable(10);  
-
-    semTab = new STable();
-
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 
     // at this point, the kernel is ready to do something
@@ -297,7 +285,7 @@ main(int argc, char **argv)
 
     // finally, run an initial user program if requested to do so
     if (userProgName != NULL) {
-      AddrSpace *space = new AddrSpace();
+      AddrSpace *space = new AddrSpace;
       ASSERT(space != (AddrSpace *)NULL);
       if (space->Load(userProgName)) {  // load the program into the space
 	space->Execute();              // run the program

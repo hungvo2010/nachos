@@ -20,7 +20,6 @@
 #include "thread.h"
 #include "switch.h"
 #include "synch.h"
-#include "main.h"
 #include "sysdep.h"
 
 // this is put at the top of the execution stack, for detecting stack overflows
@@ -90,7 +89,7 @@ Thread::~Thread()
 //----------------------------------------------------------------------
 
 void 
-Thread::Fork(VoidFunctionPtr func, void* arg)
+Thread::Fork(VoidFunctionPtr func, void *arg)
 {
     Interrupt *interrupt = kernel->interrupt;
     Scheduler *scheduler = kernel->scheduler;
@@ -179,12 +178,6 @@ Thread::Finish ()
     
     Sleep(TRUE);				// invokes SWITCH
     // not reached
-}
-
-void Thread::FreeSpace(){
-    if (space != NULL){
-        delete space;
-    }
 }
 
 //----------------------------------------------------------------------

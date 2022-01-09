@@ -20,6 +20,7 @@
 #include "copyright.h"
 #include "thread.h"
 #include "list.h"
+#include "main.h"
 
 // The following class defines a "semaphore" whose value is a non-negative
 // integer.  The semaphore has only two operations P() and V():
@@ -75,6 +76,8 @@ class Lock {
     void Release(); 		// they are both *atomic*
 
     bool IsHeldByCurrentThread();
+    				// return true if the current thread 
+				// holds this lock.
     
     // Note: SelfTest routine provided by SynchList
     

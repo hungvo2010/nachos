@@ -271,10 +271,10 @@ THREAD_H = ../threads/alarm.h\
 	../threads/synch.h\
 	../threads/synchlist.h\
 	../threads/thread.h\
-	../threads/PCB.h\
-	../threads/PTable.h\
-	../threads/STable.h\
-	../threads/Filetable.h
+	../threads/sem.h\
+	../threads/ptable.h\
+	../threads/stable.h\
+	../threads/pcb.h
 
 THREAD_C = ../threads/alarm.cc\
 	../threads/kernel.cc\
@@ -283,23 +283,25 @@ THREAD_C = ../threads/alarm.cc\
 	../threads/synch.cc\
 	../threads/synchlist.cc\
 	../threads/thread.cc\
-	../threads/PCB.cc\
-	../threads/PTable.cc\
-	../threads/STable.cc\
-	../threads/Filetable.cc
+	../threads/sem.cc\
+	../threads/ptable.cc\
+	../threads/stable.cc\
+	../threads/pcb.cc
 
-THREAD_O = alarm.o kernel.o main.o scheduler.o synch.o thread.o PCB.o PTable.o STable.o Filetable.o
+THREAD_O = alarm.o kernel.o main.o scheduler.o synch.o thread.o sem.o ptable.o stable.o pcb.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/syscall.h\
+	../userprog/ksyscall.h\
 	../userprog/synchconsole.h\
-	../userprog/noff.h\
+	../userprog/noff.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/exception.cc\
+	../userprog/ksyscall.cc\
 	../userprog/synchconsole.cc
 
-USERPROG_O = addrspace.o exception.o synchconsole.o
+USERPROG_O = addrspace.o exception.o synchconsole.o ksyscall.o
 
 FILESYS_H =../filesys/directory.h \
 	../filesys/filehdr.h\

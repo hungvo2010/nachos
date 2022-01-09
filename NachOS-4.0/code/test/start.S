@@ -58,62 +58,6 @@ Add:
 	j 	$31
 	.end Add
 
-	.globl ReadNum
-	.ent	ReadNum
-ReadNum:
-	addiu $2,$0,SC_ReadNum
-	syscall
-	j 	$31
-	.end ReadNum
-
-	.globl PrintNum
-	.ent	PrintNum
-PrintNum:
-	addiu $2,$0,SC_PrintNum
-	syscall
-	j 	$31
-	.end PrintNum
-
-	.globl ReadChar
-	.ent	ReadChar
-ReadChar:
-	addiu $2,$0,SC_ReadChar
-	syscall
-	j 	$31
-	.end ReadChar
-
-	.globl PrintChar
-	.ent	PrintChar
-PrintChar:
-	addiu $2,$0,SC_PrintChar
-	syscall
-	j 	$31
-	.end PrintChar
-
-	.globl RandomNum
-	.ent	RandomNum
-RandomNum:
-	addiu $2,$0,SC_RandomNum
-	syscall
-	j 	$31
-	.end RandomNum
-
-	.globl ReadString
-	.ent	ReadString
-ReadString:
-	addiu $2,$0,SC_ReadString
-	syscall
-	j 	$31
-	.end ReadString
-
-	.globl PrintString
-	.ent	PrintString
-PrintString:
-	addiu $2,$0,SC_PrintString
-	syscall
-	j 	$31
-	.end PrintString
-
 	.globl Exit
 	.ent	Exit
 Exit:
@@ -145,38 +89,6 @@ Join:
 	syscall
 	j	$31
 	.end Join
-
-	.globl CreateSemaphore
-	.ent	CreateSemaphore
-CreateSemaphore:
-	addiu $2,$0,SC_CreateSemaphore
-	syscall
-	j	$31
-	.end CreateSemaphore
-
-	.globl Wait
-	.ent	Wait
-Wait:
-	addiu $2,$0,SC_Wait
-	syscall
-	j	$31
-	.end Wait
-
-	.globl Signal
-	.ent	Signal
-Signal:
-	addiu $2,$0,SC_Signal
-	syscall
-	j	$31
-	.end Signal
-
-	.globl CreateFile
-	.ent	CreateFile
-CreateFile:
-	addiu $2,$0,SC_CreateFile
-	syscall
-	j 	$31
-	.end CreateFile	
 
 	.globl Create
 	.ent	Create
@@ -265,6 +177,95 @@ ThreadJoin:
 	syscall
 	j 	$31
 	.end ThreadJoin
+
+	
+	.globl ReadNum
+	.ent	ReadNum
+ReadNum:
+	addiu $2,$0,SC_ReadNum
+	syscall
+	j	$31
+	.end ReadNum
+
+	.globl PrintNum
+	.ent	PrintNum
+PrintNum:
+	addiu $2,$0,SC_PrintNum
+	syscall
+	j	$31
+	.end PrintNum
+
+	.globl ReadChar
+	.ent 	ReadChar
+ReadChar:
+	addiu $2,$0,SC_ReadChar
+	syscall
+	j	$31
+	.end ReadChar
+
+	.globl PrintChar
+	.ent	PrintChar
+PrintChar:
+	addiu $2,$0,SC_PrintChar
+	syscall
+	j	$31
+	.end PrintChar
+
+	.globl	RandomNum
+	.ent	RandomNum
+RandomNum:
+	addiu $2, $0, SC_RandomNum
+	syscall
+	j	$31
+	.end	RandomNum
+	
+	.globl	ReadString
+	.ent	ReadString
+ReadString:
+	addiu $2, $0, SC_ReadString
+	syscall
+	j	$31
+	.end	ReadString
+
+	.globl	PrintString
+	.ent	PrintString
+PrintString:
+	addiu $2, $0, SC_PrintString
+	syscall
+	j	$31
+	.end	PrintString
+
+	.globl	CreateSemaphore
+	.ent	CreateSemaphore
+CreateSemaphore:
+	addiu $2, $0, SC_CreateSemaphore
+	syscall
+	j	$31
+	.end	CreateSemaphore
+
+	.globl	Wait
+	.ent	Wait
+Wait:
+	addiu $2, $0, SC_Wait
+	syscall
+	j	$31
+	.end	Wait
+
+	.globl	Signal
+	.ent	Signal
+Signal:
+	addiu $2, $0, SC_Signal
+	syscall
+	j	$31
+	.end	Signal
+
+	.globl	GetPID
+	.ent	GetPID
+GetPID:
+	addiu $2, $0, SC_GetPID
+	syscall
+	j	$31
+	.end	GetPID
 	
 /* dummy function to keep gcc happy */
         .globl  __main
@@ -272,4 +273,3 @@ ThreadJoin:
 __main:
         j       $31
         .end    __main
-

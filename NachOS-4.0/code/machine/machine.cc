@@ -107,6 +107,7 @@ Machine::RaiseException(ExceptionType which, int badVAddr)
     kernel->interrupt->setStatus(SystemMode);
     ExceptionHandler(which);		// interrupts are enabled at this point
     kernel->interrupt->setStatus(UserMode);
+    DEBUG(dbgMach, "End Exception: " << exceptionNames[which]);
 }
 
 //----------------------------------------------------------------------

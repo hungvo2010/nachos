@@ -82,7 +82,7 @@ class Thread {
     void *machineState[MachineStateSize];  // all registers except for stackTop
 
   public:
-    int processID;
+  int processID;
     Thread(char* debugName);		// initialize a Thread 
     ~Thread(); 				// deallocate a Thread
 					// NOTE -- thread being deleted
@@ -91,7 +91,7 @@ class Thread {
 
     // basic thread operations
 
-    void Fork(VoidFunctionPtr func, void* arg); 
+    void Fork(VoidFunctionPtr func, void *arg); 
     				// Make thread run (*func)(arg)
     void Yield();  		// Relinquish the CPU if any 
 				// other thread is runnable
@@ -105,7 +105,6 @@ class Thread {
     char* getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
-    void FreeSpace();
 
   private:
     // some of the private data for this class is listed above

@@ -20,6 +20,7 @@
         "algorithm": "cpp",
         "random": "cpp",
         "limits": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "iostream": "cpp"
     }
 }

@@ -9,7 +9,7 @@
 
 int main()
 {
-  int result = CreateFile("../test/output.txt");
+  int result = Create("output.txt");
   PrintNum(result);
   Halt();
   /* not reached */
