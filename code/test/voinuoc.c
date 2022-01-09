@@ -22,6 +22,8 @@ int main()
 
     for (i = 0; i < n_sinhvien; ++i)
         Join(pid[i]);
+    
+    Close(fd1);
 
     return 0;
 }
