@@ -1,7 +1,7 @@
 #include "syscall.h"
 
-char outputFile[20] = "voinuoc.txt";
-char semaphore_name[10] = "voi nuoc";
+char outputFile[20] = "output.txt";
+char semaphore_name[10] = "voinuoc";
 char tmp[10];
 char buffer[3] = "  ";
 int main()

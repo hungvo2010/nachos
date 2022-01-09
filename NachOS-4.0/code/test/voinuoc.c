@@ -1,9 +1,9 @@
 #include "syscall.h"
 
-char inputFile[20] = "sinhvien.txt";
-char outputFile[20] = "voinuoc.txt";
+char inputFile[20] = "input.txt";
+char outputFile[20] = "output.txt";
 char sinhvien_execuatable[20] = "sinhvien";
-char semaphore_name[10] = "voi nuoc";
+char semaphore_name[10] = "voinuoc";
 char tmp[10];
 int pid[10];
 int main() {
