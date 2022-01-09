@@ -29,17 +29,17 @@
 					// See definitions listed under #else
 class OpenFile {
   public:
-    OpenFile(int f) { file = f; currentOffset = 0; }	// open the file
+    OpenFile(int f) { file = f; currentOffset = 0;}	// open the file
     ~OpenFile() { Close(file); }			// close the file
 
     int ReadAt(char *into, int numBytes, int position) { 
     		Lseek(file, position, 0); 
-		return ReadPartial(file, into, numBytes); 
+		return read_file(file, into, numBytes); 
 		}	
     int WriteAt(char *from, int numBytes, int position) { 
     		Lseek(file, position, 0); 
-		WriteFile(file, from, numBytes); 
-		return numBytes;
+		int num_written = write_file(file, from, numBytes); 
+		return num_written;
 		}	
     int Read(char *into, int numBytes) {
 		int numRead = ReadAt(into, numBytes, currentOffset); 
@@ -49,6 +49,8 @@ class OpenFile {
     int Write(char *from, int numBytes) {
 		int numWritten = WriteAt(from, numBytes, currentOffset); 
 		currentOffset += numWritten;
+		if (numWritten == 0) return -1;
+		if (numWritten < numBytes) return -2;
 		return numWritten;
 		}
 
@@ -57,6 +59,8 @@ class OpenFile {
   private:
     int file;
     int currentOffset;
+
+	
 };
 
 #else // FILESYS

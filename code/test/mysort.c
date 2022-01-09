@@ -13,7 +13,7 @@ main()
     PrintString("n = ", 10);
     n = ReadNum();
 
-    if (n > 100)
+    if (n > 100 || n < 1)
         Halt();
     
     PrintString("Input array:\n", 20);
@@ -22,7 +22,7 @@ main()
         array[i] = ReadNum();
     }
 
-    PrintString("Input type sort (1: increase, -1: decrease", 50);
+    PrintString("Input type sort (1: increase, -1: decrease): ", 50);
     type = ReadNum();
 
     if (type != 1 && type != -1)
@@ -31,8 +31,7 @@ main()
     for (i = 0; i < n - 1; ++i)
     {
         for (j = 0; j < n - i - 1; ++j)
-            if ((type == 1 && array[j] > array[j + 1]) || 
-                (type == -1 && array[j] < array[j + 1]))
+            if (type * (array[j] - array[j + 1]) > 0)
             {
                 temp = array[j];
                 array[j] = array[j + 1];

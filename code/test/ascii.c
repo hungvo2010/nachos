@@ -12,7 +12,7 @@ main()
 {
 	int i;
 	char c;
-	for (i = 0; i < 255; ++i)
+	for (i = 32; i <= 126; ++i)
 	{
 		c = (char)i;
 		PrintChar(c);

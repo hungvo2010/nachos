@@ -53,6 +53,12 @@ extern int Tell(int fd);
 extern int Close(int fd);
 extern bool Unlink(char *name);
 
+extern int create_file(char* name);
+extern int open_file(char* name, int type);
+extern int close_file(int fd);
+extern int read_file(int fd, char* buffer, int nBytes);
+extern int write_file(int fd, char* buffer, int nBytes);
+
 // Other C library routines that are used by Nachos.
 // These are assumed to be portable, so we don't include a wrapper.
 extern "C" {

@@ -569,3 +569,43 @@ SendToSocket(int sockID, char *buffer, int packetSize, char *toName)
     // This may mask other kinds of failures, but it is the
     // right thing to do in the common case.
 }
+
+
+int create_file(char* name)
+{
+    int fd = open(name, O_RDWR|O_CREAT|O_TRUNC, 0666);
+    if (fd > 0)
+    {
+        close(fd);
+        return fd;
+    }
+    return -1;
+}
+
+int
+open_file(char *name, int type)
+{ // type == 0 => read & write, read == 1 => read only
+    int fd = -1;
+    if (type == 0)
+        fd = open(name, O_RDWR, 0);
+    else if (type == 1) 
+        fd = open(name, O_RDONLY, 0);
+    else if (type == 2)
+        fd = open(name, O_WRONLY | O_APPEND, 0);
+    return fd >= 0 ? fd : -1;
+}
+
+int close_file(int fd)
+{
+    return close(fd);
+}
+
+int read_file(int fd, char* buffer, int nBytes)
+{
+    return read(fd, buffer, nBytes);
+}
+
+int write_file(int fd, char* buffer, int nBytes)
+{
+    return write(fd, buffer, nBytes);
+}

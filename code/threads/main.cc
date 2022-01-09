@@ -132,7 +132,7 @@ Print(char *name)
     int i, amountRead;
     char *buffer;
 
-    if ((openFile = kernel->fileSystem->Open(name)) == NULL) {
+    if ((openFile = kernel->fileSystem->Open(name, 1)) == NULL) {
         printf("Print: unable to open file %s\n", name);
         return;
     }

@@ -112,13 +112,13 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS := add halt shell matmult sort segments printnum readnum printchar randomnum readstring ascii mysort help
+PROGRAMS := add halt shell matmult sort segments printnum readnum printchar randomnum readstring ascii mysort help create open read write exec semaphore ping pong sinhvien voinuoc
 SOURCES := $(PROGRAMS:=.c)
 OBJECTS := $(PROGRAMS:=.o)
 COFF_PROGRAMS := $(PROGRAMS:=.coff)
 endif
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) clean
 
 $(PROGRAMS): $(COFF_PROGRAMS)
 	$(COFF2NOFF) $(@:=.coff) $@

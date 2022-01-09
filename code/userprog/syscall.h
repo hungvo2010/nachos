@@ -44,6 +44,12 @@
 #define SC_ReadString	85
 #define SC_PrintString	86
 
+#define SC_CreateSemaphore 100
+#define SC_Wait 101
+#define SC_Signal 102
+
+#define SC_GetPID 120
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -118,7 +124,7 @@ typedef int OpenFileId;
 /* Create a Nachos file, with name "name" */
 /* Note: Create does not open the file.   */
 /* Return 1 on success, negative error code on failure */
-int Create(char *name);
+int Create(char *filename);
 
 /* Remove a Nachos file, with name "name" */
 int Remove(char *name);
@@ -126,7 +132,7 @@ int Remove(char *name);
 /* Open the Nachos file "name", and return an "OpenFileId" that can 
  * be used to read and write to the file.
  */
-OpenFileId Open(char *name);
+OpenFileId Open(char *name, int type);
 
 /* Write "size" bytes from "buffer" to the open file. 
  * Return the number of bytes actually read on success.
@@ -215,6 +221,15 @@ void ReadString(char* buffer, int length);
  * Print buffer (char*) to console.
  */
 void PrintString(char* buffer, int length);
+
+int CreateSemaphore(char* name, int val);
+
+int Signal(char* name);
+
+int Wait(char* name);
+
+int GetPID();
+
 
 #endif /* IN_ASM */
 

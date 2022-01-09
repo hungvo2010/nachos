@@ -11,6 +11,7 @@ int
 main()
 {
 	char buffer[100];
+	PrintString("Input string: ", 20);
 	ReadString(buffer, 100);
 	PrintString(buffer, 100);
 	Halt();

@@ -9,7 +9,7 @@
 
 int main()
 {
-	char x;
+	int x;
 	x = ReadNum();
 	PrintNum(x);
 	Halt();
