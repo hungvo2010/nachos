@@ -1,30 +1,50 @@
 /* help.c
- *	Program print the basic introduction to the group and a brief description of the program mysort and ascii
- *
+ * Gioi thieu ve nhom va cac file sort cung nhu ascii
  */
+
 #include "syscall.h"
 
-#define L_INTRO 500
-char INTRO[L_INTRO] = "Thanh vien:\n\
-	19120033\tPhan Loc Son\n\
-	19120732\tNguyen Xuan Vy\n\
-	19120734\tLe Minh Tu\n\n";
+int main() {
+    char* teamIntro = "------Gioi thieu nhom------\n";
+    char* school = "DH KHTN - DHQG TP.HCM\n";
+    char* class = "19CNTN\n";
+    char* team =
+        "Doan Kim Huy - 19120239\n"
+        "Vo Chanh Hung - 19120523\n"
+        "Quach Binh Long - 19120283\n";
 
-#define L_ASCII 500
-char ASCII[L_ASCII] = "ascii.c:\n\
-	Chuong trinh se dung vong for de in ra cac so \n\
-	co ma ascii tu 32 den 126\n\n";
+    char* slash = "----------------------------------------------\n";
 
-#define L_SORT 500
-char SORT[L_SORT] = "mysort.c:\n\
-	Chuong trinh se cho nguoi dung nhap vao n (size cua mang), sau do nhap tung phan tu cua mang vao,\n\
-	cuoi cung, chuong  trinh se in ra mang da sort\n\n";
-int 
-main()
-{
-	PrintString(INTRO, L_INTRO);
-	PrintString(ASCII, L_ASCII);
-	PrintString(SORT, L_SORT);
+    char* sortIntroduction =
+        "Chuong trinh Sort cho phep sap xep mot mang so nguyen co so phan tu "
+        "nho hon 100.\n";
+    char* sortUsage =
+        "Cach su dung:\n"
+        "1. Nhap so phan tu cua mang nho hon 100.\n"
+        "2. Nhap cac phan tu cua mang.\n"
+        "3. Chon sap xep tang dan hoac giam dan.\n"
+        "4. Sap xep mang bang thuat toan Bubble Sort.\n";
 
-	return 0;
+    char* asciiIntroduction =
+        "Chuong trinh Ascii in ra danh sach cac ky tu thuoc bang ma ascii.\n";
+
+    // Gioi thieu nhom
+    PrintString(teamIntro);
+    PrintString(school);
+    PrintString(class);
+    PrintString(team);
+
+    PrintString(slash);
+
+    // Gioi thieu chuong trinh Sort
+    PrintString(sortIntroduction);
+    PrintString(sortUsage);
+
+    PrintString(slash);
+
+    // Gioi thieu chuong trinh Ascii
+    PrintString(asciiIntroduction);
+
+    Halt();
+    /* not reached */
 }
