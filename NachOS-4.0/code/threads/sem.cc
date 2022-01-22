@@ -19,9 +19,5 @@ void Sem::signal()
 }
 char *Sem::GetName()
 {
-    // hủy các đối tượng đã tạo
-    // thực hiện thao tác chờ
-    // thực hiện thao tác giải phóng Semaphore
-    // Trả về tên của Semaphore
     return name;
 }

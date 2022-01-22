@@ -20,19 +20,6 @@ PTable::~PTable() {
             delete pcb[i];
     }
 }
-/*
-return PID
-Thực thi cho system call SC_EXEC, 
-kiểm tra chương trình được gọi có tồn tại trong máy không. 
-Kiểm tra thử xem chương trình gọi lại chính nó không? 
-Chúng ta không cho phép điều này. 
-Kiểm tra còn slot trống để lưu tiến trình mới không (max là 10 process). 
-Nếu thỏa các điều kiện trên thì ta lấy index của slot trống
- là processID cảu tiền trình mới tạo này, giả sử là ID
- . Và gọi phương thức EXEC của lớp PCB với đối tượng tương ứng quản lý 
- process này, nghĩa là gọi pcb[ID]->Exec(…). 
- Xem chi tiết mo tả trong lớp PCB ở bên dưới.
-*/
 
 int PTable::ExecUpdate(char *name) {
     bmsem->P();
@@ -128,11 +115,10 @@ void PTable::Remove(int pid) {
     bm->Clear(pid);
     delete pcb[pid];
 }
-//Xóa một processID ra khỏng mãng quản lý nó, khi mà tiến trình này kết thúc.
 
 char *PTable::GetFileName(int id) {
     return pcb[id]->getThread()->getName();
-}  // Trả về tên của tiến trình
+}
 
 PCB *PTable::GetProcess(int id) {
     if (bm->Test(id))

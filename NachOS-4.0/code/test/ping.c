@@ -1,13 +1,12 @@
 #include "syscall.h"
-char F[10] = "Ping\n";
+char arr[20] = "Pinggg\n";
 int main()
 {
     int i = 0;
     int pid = GetPID();
-    
     PrintNum(pid);
-    for (i = 0; i < 5; ++i)
+    for (i = 0; i < 10; ++i)
     {
-        PrintString(F, 10);
+        PrintString(arr, 10);
     }
 }

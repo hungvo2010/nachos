@@ -39,7 +39,7 @@ int STable::Signal(char *name)
     else
     {
         semTab[found]->signal();
-        return 0; // sucess
+        return 0;
     }
 }
 int STable::findByName(char *name)

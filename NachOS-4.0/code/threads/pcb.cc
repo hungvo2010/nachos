@@ -26,30 +26,33 @@ PCB::~PCB() {
 }
 
 void PCB::JoinWait() {
-    //Gọi joinsem->P() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ JoinRelease để thực hiện tiếp.
+    //Goi joinsem->P() sau do cho JoinRelease() de chay tiep
     joinsem->P();
 }
 
 void PCB::JoinRelease() {
-    // Gọi joinsem->V() để giải phóng tiến trình gọi JoinWait().
+    // Goi joinsem->V() de giai phong tien trinh da goi JoinWait()
     joinsem->V();
 }
 
 void PCB::ExitWait() {
-    // Gọi exitsem-->V() để tiến trình chuyển sang trạng thái block và ngừng lại, chờ ExitReleaseđể thực hiện tiếp.
+    // Goi exitsem-->V() ngung tien trinh, cho ExitRelease()
     exitsem->P();
 }
 
-void PCB::ExitRelease() {  // Gọi exitsem-->V() để giải phóng tiến trình đang chờ.
+void PCB::ExitRelease() {  
+    // Goi exitsem-->V() de free tien trinh dang cho duoc giai phong
     exitsem->V();
 }
 
 void PCB::IncNumWait() {
+    // Tang so luong tien trinh dang cho
     multex->P();
     numwait++;
     multex->V();
 }
 void PCB::DecNumWait() {
+    // Giam so luong tien trinh dang cho
     multex->P();
     numwait--;
     multex->V();
@@ -59,32 +62,26 @@ int PCB::GetExitCode() { return exitcode; }
 
 void StartProcess_2(int id);
 int PCB::Exec(char* filename, int id) {
-    // Gọi multex->P(); để giúp tránh tình trạng nạp 2 tiến trình cùng 1 lúc.
+    // Goi multex->P() ngan khong cho 2 tien trinh chay cung luc
     multex->P();
 
-    // Kiểm tra thread đã khởi tạo thành công chưa, nếu chưa thì báo lỗi là không đủ bộ nhớ, gọi multex->V() và return.
-    this->thread = new Thread(filename);  // (./threads/thread.h)
+    this->thread = new Thread(filename);
 
     if (this->thread == NULL) {
         printf("\nPCB::Exec: Not enough memory!\n");
-        multex->V();  // Nha CPU de nhuong CPU cho tien trinh khac
-        return -1;    // Tra ve -1 neu that bai
+        multex->V();
+        return -1;
     }
 
-    //  Đặt processID của thread này là id.
     this->thread->processID = id;
-    // Đặt parrentID của thread này là processID của thread gọi thực thi Exec
     this->parentID = kernel->currentThread->processID;
-    // Gọi thực thi Fork(StartProcess_2,id) => Ta cast thread thành kiểu int, sau đó khi xử ký hàm StartProcess ta cast Thread về đúng kiểu của nó.
     this->thread->Fork((VoidFunctionPtr)StartProcess_2, (void*)id);
 
     multex->V();
-    // Trả về id.
     return id;
 }
 
 void StartProcess_2(int id) {
-    // Lay fileName cua process id nay
     char* fileName = kernel->pTab->GetFileName(id);
 
     AddrSpace* space;

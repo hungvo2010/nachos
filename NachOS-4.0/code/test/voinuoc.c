@@ -13,7 +13,7 @@ int main() {
     CreateSemaphore(semaphore_name, 1);
     fd1 = Open(inputFile, 0);
     CreateFile(outputFile);
-    Read(tmp, 1, fd1);  // n < 5
+    Read(tmp, 1, fd1);
     n_sinhvien = tmp[0] - '0';
 
     for (i = 0; i < n_sinhvien; ++i)

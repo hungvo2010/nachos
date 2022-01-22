@@ -80,18 +80,6 @@ void ExceptionHandler(ExceptionType which) {
             kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
             return;
 
-        case PageFaultException:
-        case ReadOnlyException:
-        case BusErrorException:
-        case AddressErrorException:
-        case OverflowException:
-        case IllegalInstrException:
-        case NumExceptionTypes:
-            DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
-            SysHalt();
-            break;
-            return;
-
         case SyscallException:
             switch (type) {
                 case SC_Halt:
@@ -101,21 +89,17 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_Add:  // Duoc cai dat san
+                case SC_Add:  // Co san
                     DEBUG(dbgSys,
                           "Add " << kernel->machine->ReadRegister(4) << " + "
                                  << kernel->machine->ReadRegister(5) << "\n");
 
-                    /* Process SysAdd Systemcall*/
                     result = SysAdd(
-                        /* int op1 */ (int)kernel->machine->ReadRegister(4),
-                        /* int op2 */ (int)kernel->machine->ReadRegister(5));
+                        (int)kernel->machine->ReadRegister(4),
+                        (int)kernel->machine->ReadRegister(5));
 
                     DEBUG(dbgSys, "Add returning with " << result << "\n");
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
-
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -123,19 +107,15 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_ReadNum:  // Syscall doc so nguyen
+                case SC_ReadNum:  // Syscall nay de doc so nguyen
                     DEBUG(dbgSys, "Read integer from console input\n");
-
-                    /* Process SysReadNum Systemcall */
 
                     result = SysReadNum();
 
                     DEBUG(dbgSys, "Read returning with " << result << "\n");
 
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -147,13 +127,10 @@ void ExceptionHandler(ExceptionType which) {
                     DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
                                            << " to console output\n");
 
-                    /* Process SysPrintNum Systemcall */
-
                     SysPrintNum((int)kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "Print completed\n");
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -161,10 +138,8 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_ReadChar:  // Syscall doc ky tu
+                case SC_ReadChar:
                     DEBUG(dbgSys, "Read char from console input\n");
-
-                    /* Process SysReadChar Systemcall */
 
                     charResult = SysReadChar();
 
@@ -172,7 +147,6 @@ void ExceptionHandler(ExceptionType which) {
 
                     kernel->machine->WriteRegister(2, (int)charResult);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -180,16 +154,14 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_PrintChar:  // Syscall in ky tu
+                case SC_PrintChar:
                     DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
                                            << " to console output\n");
-                    /* Process SysPrintChar Systemcall */
 
                     SysPrintChar((char)kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "Print completed\n");
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -197,9 +169,8 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_RandomNum:  // Syscall tao so nguyen ngau nhien
+                case SC_RandomNum:  // Syscall nay de tao so nguyen ngau nhien
                     DEBUG(dbgSys, "Random number");
-                    /* Process SysRandomNum Systemcall */
 
                     result = SysRandomNum();
 
@@ -207,7 +178,6 @@ void ExceptionHandler(ExceptionType which) {
 
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -215,14 +185,12 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_ReadString:  // Syscall doc chuoi
+                case SC_ReadString:
                     DEBUG(dbgSys, "Read string from console input\n");
-                    /* Process SysReadString Systemcall */
 
                     SysReadString(kernel->machine->ReadRegister(4),
                                   kernel->machine->ReadRegister(5));
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -230,16 +198,14 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_PrintString:  // Syscall in chuoi
+                case SC_PrintString:  // Syscall nay de in chuoi ra console
                     DEBUG(dbgSys, "Print " << kernel->machine->ReadRegister(4)
                                            << " to console output\n");
-                    /* Process SysPrintString Systemcall */
 
                     SysPrintString(kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "Print completed\n");
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -247,21 +213,17 @@ void ExceptionHandler(ExceptionType which) {
                     ASSERTNOTREACHED();
                     break;
 
-                case SC_CreateFile:  // Tao file
+                case SC_CreateFile:  // Syscall nay de tao file
                 {
                     DEBUG(dbgSys,
                           "CreateFile " << kernel->machine->ReadRegister(4) << "\n");
 
-                    /* Process Sys_Create Systemcall*/
 
                     result = SysCreateFile(kernel->machine->ReadRegister(4));
-                    /* char* filename */
 
                     DEBUG(dbgSys, "CreateFile returning with " << result << "\n");
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -270,18 +232,15 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Open: {
-                    //OpenFileID Open(char *name, int type)
+                case SC_Open: { //Syscall nay de mo file
                     DEBUG(dbgSys,
                           "OpenFile " << kernel->machine->ReadRegister(4) << "\n"
                                       << kernel->machine->ReadRegister(5));
                     result = SysOpenFile(kernel->machine->ReadRegister(4), kernel->machine->ReadRegister(5));
 
                     DEBUG(dbgSys, "OpenFile returning with " << result << "\n");
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -290,15 +249,14 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Read: {
+                case SC_Read: { // Syscall nay de doc file
                     result = SysReadFile(kernel->machine->ReadRegister(4),
                                          kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
 
                     DEBUG(dbgSys, "ReadFile returning with " << result << "\n");
-                    /* Prepare Result */
+
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -307,15 +265,14 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Write: {
+                case SC_Write: { // Syscall nay de ghi file
                     result = SysWriteFile(kernel->machine->ReadRegister(4),
                                           kernel->machine->ReadRegister(5), kernel->machine->ReadRegister(6));
 
                     DEBUG(dbgSys, "WriteFile returning with " << result << "\n");
-                    /* Prepare Result */
+
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -324,14 +281,12 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Close: {
+                case SC_Close: { // Syscall nay de dong file
                     result = SysCloseFile(kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "CloseFile returning with " << result << "\n");
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -340,14 +295,14 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Exec: {
+                case SC_Exec: { // Syscall nay de goi thuc thi chuong trinh con
                     result = SysExec(kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "Exec returning with " << result << "\n");
-                    /* Prepare Result */
+
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
+
                     IncPCReg();
 
                     return;
@@ -356,14 +311,12 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Join: {
+                case SC_Join: { // Syscall nay de join chuong trinh con vao cha
                     result = SysJoin(kernel->machine->ReadRegister(4));
 
                     DEBUG(dbgSys, "Join returning with " << result << "\n");
-                    /* Prepare Result */
                     kernel->machine->WriteRegister(2, (int)result);
 
-                    /* Modify return point */
                     IncPCReg();
 
                     return;
@@ -372,7 +325,7 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_Exit: {
+                case SC_Exit: { // Syscall nay de xac nhan chuong trinh con duoc ngung thanh cong
                     DEBUG(dbgSys, "Exit Exception \n");
                     result = (int)kernel->machine->ReadRegister(4);
                     result = kernel->pTab->ExitUpdate(result);
@@ -387,7 +340,7 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_CreateSemaphore:
+                case SC_CreateSemaphore: { // Syscall nay tao ra cau truc semaphore moi
                     DEBUG(dbgSys, "Create Semaphore Exception \n");
                     result = SysCreateSemaphore(kernel->machine->ReadRegister(4),
                                                 kernel->machine->ReadRegister(5));
@@ -403,6 +356,7 @@ void ExceptionHandler(ExceptionType which) {
 
                     ASSERTNOTREACHED();
                     break;
+                }
 
                 case SC_Wait: {
                     result = SysWait(kernel->machine->ReadRegister(4));
@@ -434,7 +388,7 @@ void ExceptionHandler(ExceptionType which) {
                     break;
                 }
 
-                case SC_GetPID: {
+                case SC_GetPID: { // Syscall lay id cua tien trinh
                     result = kernel->currentThread->processID;
 
                     kernel->machine->WriteRegister(2, (int)result);
@@ -442,8 +396,10 @@ void ExceptionHandler(ExceptionType which) {
                     return;
                 }
                 default:
-                    cerr << "Unexpected system call " << type << "\n";
+                    DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
+                    SysHalt();
                     break;
+                    return;
             }
             break;
         default:

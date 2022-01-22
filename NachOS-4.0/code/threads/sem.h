@@ -8,10 +8,8 @@ class Sem
 {
 private:
     char name[50];
-    Semaphore *sem; // Tạo Semaphore để quản lý
+    Semaphore *sem;
 public:
-    // khởi tạo đối tượng Sem. Gán giá trị ban đầu là null
-    // nhớ khởi tạo bm sử dụng
     Sem(char *na, int i);
     ~Sem();
     void wait();

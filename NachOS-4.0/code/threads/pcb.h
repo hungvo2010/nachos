@@ -8,22 +8,22 @@
 class Semaphore;
 class PCB {
    private:
-    Semaphore* joinsem;  //semaphore cho quá trình join
-    Semaphore* exitsem;  //semaphore cho quá trình exit
+    Semaphore* joinsem;  //semaphore cho join
+    Semaphore* exitsem;  //semaphore cho exit
     Semaphore* multex;
     int exitcode;
     Thread* thread;
     int pid;
-    int numwait;  // số tiến trình đã join
+    int numwait;  // so luong tien trinh da join
     OpenFile* filetable[MAX_FILE];
     Bitmap* fileBitmap;
     AddrSpace* space;
 
    public:
-    int parentID;  //ID của tiến trình cha
+    int parentID;  // ID cua process cha
     PCB(int id);
     ~PCB();
-    int Exec(char* filename, int pid);  //Nạp chương trình có tên lưu trong biến filename và pid là ProcessId
+    int Exec(char* filename, int pid);
 
     int GetID();
     int GetNumWait();

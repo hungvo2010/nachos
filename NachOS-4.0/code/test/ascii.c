@@ -1,7 +1,5 @@
 /* ascii.c
- *	Test rogram to print the ascii table.
- *	
- *	Just do PrintChar syscall.
+ *	Test program for the ascii table.
  *
  */
 
