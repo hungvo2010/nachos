@@ -1,32 +1,30 @@
 #include "syscall.h"
 
-char output[20] = "output.txt";
-char voinuoc[10] = "voinuoc";
+char outputFile[20] = "output.txt";
+char semaphore[10] = "voinuoc";
 char tmp[10];
 char buffer[3] = "  ";
-int main()
-{
-    int fileid1;
+int main() {
+    int file_id;
     int pid;
-    int count = 0;
+    int current_amount = 0;
     int i = 0;
-    int rand_num;
+    int random_number;
     pid = GetPID();
-    
 
-    while (count < 10)
-    {
-        Wait(voinuoc);
-        fileid1 = Open(output, 2);
+    while (current_amount < 10) {
+        Wait(semaphore);
+        file_id = Open(outputFile, 2);
 
         buffer[0] = (char)('0' + pid);
-        rand_num = RandomNum() % 10000;
-        for (i = 0; i < rand_num; ++i);
-	    Write(buffer, 2, fileid1);
-        count++;
+        random_number = RandomNum() % 10000;
+        for (i = 0; i < random_number; ++i)
+            ;
+        Write(buffer, 2, file_id);
+        current_amount++;
 
-        Close(fileid1);
-        Signal(voinuoc);
-    } 
+        Close(file_id);
+        Signal(semaphore);
+    }
     return 0;
 }
