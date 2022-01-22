@@ -49,7 +49,7 @@
 
 #define SC_CreateFile 50
 
-#define SC_GetPID 120
+#define SC_GetPID 51
 
 #ifndef IN_ASM
 
